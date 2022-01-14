@@ -1,0 +1,906 @@
+﻿@model MilitaryCollege.Models.ViewModels.OfficerVM
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>تعديل ضابط</h1>
+
+<hr />
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-12">
+            <form asp-action="Edit" class="needs-validation" enctype="multipart/form-data" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @*<div class="row">
+                        <div class=" col-md-8">
+                            <label class="control-label" for="TournamentId">الدورة</label>
+                            <input type="text" id="txttournament" class="form-control col-md-6" autocomplete="on" asp-for="@Model.TournamentId" />
+                        </div>
+                    </div>*@
+                @Html.HiddenFor(model => model.TournamentId)
+                @Html.HiddenFor(model => model.Id)
+
+
+
+
+
+
+
+                <div class="bs-example">
+                    <div class="accordion" id="accordionExample">
+                        @* المعلومات الشخصية *@
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h2 class="mb-0">
+                                    <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#PersonalInfo"><i class="fa fa-plus-circle"></i> المعلومات الشخصية</button>
+                                </h2>
+                            </div>
+                            <div id="PersonalInfo" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="col-md-4">
+                                        <label asp-for="@Model.Profileimage" class="control-label"></label>
+                                        <div class="custom-file mb-3">
+                                            <label class="custom-file-label pl-0 ">انقر هنا لإضافة الصورة </label>
+                                            <input asp-for="@Model.Profileimage" class="form-control custom-file-input" />
+                                            <span asp-validation-for="@Model.Profileimage" class="text-danger"></span>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <img src="~/Media/Officer_Profile/@Model.ExistingImage" style="width:130px;height:130px" />
+                                        </div>
+                                        @Html.HiddenFor(m => m.ExistingImage)
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.Name" class="control-label"></label>
+                                            <input asp-for="@Model.Name" class="form-control" required />
+                                            <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.PhoneNumber" class="control-label"></label>
+                                            <input asp-for="@Model.PhoneNumber" class="form-control" />
+                                            <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.MilitaryNumber" class="control-label"></label>
+                                            <input asp-for="@Model.MilitaryNumber" class="form-control" />
+                                            <span asp-validation-for="@Model.MilitaryNumber" class="text-danger"></span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.Email" class="control-label"></label>
+                                            <input asp-for="@Model.Email" class="form-control" />
+                                            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.BirthDate" class="control-label"></label>
+                                            <input asp-for="@Model.BirthDate" type="date" class="form-control" />
+                                            <span asp-validation-for="@Model.BirthDate" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.BirthAddress" class="control-label"></label>
+                                            <input asp-for="@Model.BirthAddress" class="form-control" />
+                                            <span asp-validation-for="@Model.BirthAddress" class="text-danger"></span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.Address" class="control-label"></label>
+                                            <input asp-for="@Model.Address" class="form-control" />
+                                            <span asp-validation-for="@Model.Address" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.Nationality" class="control-label"></label>
+                                            <input asp-for="@Model.Nationality" class="form-control datepicker" />
+                                            <span asp-validation-for="@Model.Nationality" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.BloodType" class="control-label"></label>
+                                            <input asp-for="@Model.BloodType" class="form-control" />
+                                            <span asp-validation-for="@Model.BloodType" class="text-danger"></span>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.Height" class="control-label"></label>
+                                            <input asp-for="@Model.Height" class="form-control" />
+                                            <span asp-validation-for="@Model.Height" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            @if (SignInManager.IsSignedIn(User))
+                                            {
+                                                if (!User.IsInRole("AdminInvT"))
+                                                {
+                                                    <label asp-for="@Model.PreviousJob" class="control-label"></label>
+                                                }
+                                                else
+                                                {
+                                                    <label asp-for="@Model.PreviousJob" class="control-label">مركزه السابق</label>
+
+                                                }
+                                            }                                            <input asp-for="@Model.PreviousJob" class="form-control" />
+                                            <span asp-validation-for="@Model.PreviousJob" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label asp-for="@Model.HealthProblem" class="control-label"></label>
+                                            <input asp-for="@Model.HealthProblem" class="form-control" />
+                                            <span asp-validation-for="@Model.HealthProblem" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*التحصيل العلمي *@
+                        @* get count of EducationalAttainments and set counter in javascript to this count for next field *@
+                        <input class="EducationalAttainmentsCount" type="hidden" data-EducationalAttainments-count="@Model.EducationalAttainments.Count" />
+
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                                <h2 class="mb-0">
+                                    <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#EducationalAttainments"><i class="fa fa-plus-circle"></i> التحصيل العلمي</button>
+                                </h2>
+                            </div>
+                            <div id="EducationalAttainments" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <table id="EducationalAttainmentsTable" class="table order-list EducationalAttainmentsTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-sm-3"><label asp-for="@Model.EducationalAttainments.First().Certificate"></label></th>
+                                                <th class="col-sm-3"><label asp-for="@Model.EducationalAttainments.First().Source"></label></th>
+                                                <th class="col-sm-3"><label asp-for="@Model.EducationalAttainments.First().Date"></label></th>
+                                                <th class="col-sm-1"><label asp-for="@Model.EducationalAttainments.First().Grade"></label></th>
+                                                <th class="col-sm-1 forbtndeleterow"></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @* if post sent and there is an error*@
+                                            @if (Model != null && Model.EducationalAttainments.Count != 0)
+                                            {
+                                                int index = 0;
+                                                foreach (var extT in Model.EducationalAttainments)
+                                                {
+                                                    <tr>
+                                                        <td class="col-sm-3"><input asp-for="@Model.EducationalAttainments[index].Certificate" class="EducationalAttainmentsCertificate form-control" /></td>
+                                                        <td class="col-sm-3"><input asp-for="@Model.EducationalAttainments[index].Source" class="EducationalAttainmentsSource form-control" /></td>
+                                                        <td class="col-sm-3"><input asp-for="@Model.EducationalAttainments[index].Date" class="EducationalAttainmentsDate form-control" /></td>
+                                                        <td class="col-sm-2"><input asp-for="@Model.EducationalAttainments[index].Grade" class="EducationalAttainmentsGrade form-control" /></td>
+                                                        @if (index > 0)
+                                                        {
+                                                            <td class="col-sm-2"><input type="button" class="ibtnDel btn btn-md btn-danger " value="حذف"></td>
+                                                        }
+                                                    </tr>
+                                                    index++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td class="col-sm-3"><input name="EducationalAttainments[0].Certificate" class="EducationalAttainmentsCertificate form-control" /></td>
+                                                    <td class="col-sm-3"><input name="EducationalAttainments[0].Source" class="EducationalAttainmentsSource form-control" /></td>
+                                                    <td class="col-sm-3"><input name="EducationalAttainments[0].Date" class="EducationalAttainmentsDate form-control" /></td>
+                                                    <td class="col-sm-2"><input name="EducationalAttainments[0].Grade" class="EducationalAttainmentsGrade form-control" /></td>
+                                                    <td class="col-sm-1">
+                                                        <a class="deleteRow"></a>
+                                                    </td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="col-sm-3">
+                                                    <input type="button" class="btn btn-primary text-center" id="addeducationalrow" value="إضافة تحصيل علمي" />
+                                                </td>
+                                                <td class="col-sm-3"></td>
+                                                <td class="col-sm-3"></td>
+                                                <td class="col-sm-2"></td>
+                                                <td class="col-sm-1"></td>
+
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* اللغات *@
+                        @* get count of Languages and set counter in javascript to this count for next field *@
+                        <input class="languagesCount" type="hidden" data-languages-count="@Model.Languages.Count" />
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                                <h2 class="mb-0">
+                                    <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#Languages"><i class="fa fa-plus-circle"></i> اللغات </button>
+                                </h2>
+                            </div>
+                            <div id="Languages" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <table id="LanguagesTable" class="table order-list LanguagesTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-sm-2"><label asp-for="@Model.Languages.First().Name"></label></th>
+                                                <th class="col-sm-2"><label asp-for="@Model.Languages.First().Listen"></label></th>
+                                                <th class="col-sm-2"><label asp-for="@Model.Languages.First().Speak"></label></th>
+                                                <th class="col-sm-2"><label asp-for="@Model.Languages.First().Read"></label></th>
+                                                <th class="col-sm-2"><label asp-for="@Model.Languages.First().Write"></label></th>
+                                                <th class="col-sm-2 forbtndeleterow"></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @if (Model != null && Model.Languages.Count != 0)
+                                            {
+                                                int index = 0;
+                                                foreach (var extT in Model.Languages)
+                                                {
+                                                    <tr>
+                                                        <td class="col-sm-2"><input asp-for="@Model.Languages[index].Name" class="LanguagesName form-control"></td>
+                                                        <td class="col-sm-2"><input asp-for="@Model.Languages[index].Listen" class="LanguagesLiten form-control"></td>
+                                                        <td class="col-sm-2"><input asp-for="@Model.Languages[index].Speak" class="LanguagesSpeak form-control"></td>
+                                                        <td class="col-sm-2"><input asp-for="@Model.Languages[index].Read" class="LanguagesRead form-control"></td>
+                                                        <td class="col-sm-2"><input asp-for="@Model.Languages[index].Write" class="LanguagesWrite form-control"></td>
+
+
+                                                        @if (index > 0)
+                                                        {
+                                                            <td class="col-sm-2"><input type="button" class="btnDelLanguage btn btn-md btn-danger " value="حذف"></td>
+                                                        }
+                                                    </tr>
+                                                    index++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td class="col-sm-2"><input name="Languages[0].Name" class="LanguagesName form-control"></td>
+                                                    <td class="col-sm-2"><input name="Languages[0].Listen" class="LanguagesListen form-control"></td>
+                                                    <td class="col-sm-2"><input name="Languages[0].Speak" class="LanguagesSpeak form-control"></td>
+                                                    <td class="col-sm-2"><input name="Languages[0].Read" class="LanguagesRead form-control"></td>
+                                                    <td class="col-sm-2"><input name="Languages[0].Write" class="LanguagesWrite form-control"></td>
+                                                    <td class="col-sm-1">
+                                                        <a class="deleteLanguageRow"></a>
+                                                    </td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="col-sm-2">
+                                                    <input type="button" class="btn btn-primary text-center" id="addLanguagerow" value="إضافة لغة" />
+                                                </td>
+                                                <td class="col-sm-3"></td>
+                                                <td class="col-sm-3"></td>
+                                                <td class="col-sm-2"></td>
+                                                <td class="col-sm-1"></td>
+
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* الهوايات *@
+                        @* get count of Hobbies and set counter in javascript to this count for next field *@
+                        <input class="HobbiesCount" type="hidden" data-Hobbies-count="@Model.Hobbies.Count" />
+
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                                <h2 class="mb-0">
+                                    <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#Hobbies"><i class="fa fa-plus-circle"></i> الهوايات </button>
+                                </h2>
+                            </div>
+                            <div id="Hobbies" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <table id="HobbiesTable" class="table order-list HobbiesTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-sm-3"><label asp-for="@Model.Hobbies.First().Name"></label></th>
+                                                <th class="col-sm-3"><label asp-for="@Model.Hobbies.First().Explanation"></label></th>
+                                                <th class="col-sm-3"><label asp-for="@Model.Hobbies.First().Level"></label></th>
+
+                                                <th class="col-sm-3 forbtndeleterow"></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @* if post sent and there is an error*@
+                                            @if (Model != null && Model.Hobbies.Count != 0)
+                                            {
+                                                int index = 0;
+                                                foreach (var extT in Model.Hobbies)
+                                                {
+                                                    <tr>
+                                                        <td class="col-sm-3"><input asp-for="@Model.Hobbies[index].Name" class="HobbiesName form-control"></td>
+                                                        <td class="col-sm-3"><input asp-for="@Model.Hobbies[index].Explanation" class="HobbiesExplanation form-control"></td>
+                                                        <td class="col-sm-3"><input asp-for="@Model.Hobbies[index].Level" class="HobbiesLevel form-control"></td>
+
+
+                                                        @if (index > 0)
+                                                        {
+                                                            <td class="col-sm-3"><input type="button" class="btnDelHobby btn btn-md btn-danger " value="حذف"></td>
+                                                        }
+                                                    </tr>
+                                                    index++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td class="col-sm-3"><input name="Hobbies[0].Name" class="HobbiesName form-control"></td>
+                                                    <td class="col-sm-3"><input name="Hobbies[0].Explanation" class="HobbiesExplanation form-control"></td>
+                                                    <td class="col-sm-3"><input name="Hobbies[0].Level" class="HobbiesLevel form-control"></td>
+
+                                                    <td class="col-sm-3">
+                                                        <a class="deleteHobbyRow"></a>
+                                                    </td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="col-sm-2">
+                                                    <input type="button" class="btn btn-primary text-center" id="addHobbyrow" value="إضافة هواية" />
+                                                </td>
+                                                <td class="col-sm-3"></td>
+                                                <td class="col-sm-3"></td>
+                                                <td class="col-sm-3"></td>
+
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            @if (!User.IsInRole("AdminInvT"))
+                            {
+                                @*الكلية الحربية*@
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                        <h2 class="mb-0">
+                                            <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#MilitaryCollege"><i class="fa fa-plus-circle"></i> الكلية الحربية</button>
+                                        </h2>
+                                    </div>
+                                    <div id="MilitaryCollege" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-4 text-center font-weight-bold"> التصنيف عند الدخول</div>
+                                                <div class="col-md-2 text-center font-weight-bold"> </div>
+                                                <div class="col-md-4 text-center font-weight-bold"> التصنيف عند الخروج   </div>
+                                                <div class="col-md-1"></div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-1"></div>
+
+                                                <div class="col-md-2 text-center">
+                                                    <label asp-for="@Model.RatingEnteringYear" class="control-label "></label>
+                                                    <input asp-for="@Model.RatingEnteringYear" class="form-control" />
+                                                    <span asp-validation-for="RatingEnteringYear" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-2 text-center">
+                                                    <label asp-for="@Model.RatingEnteringNumber" class="control-label text-center"></label>
+                                                    <input asp-for="@Model.RatingEnteringNumber" class="form-control" />
+                                                    <span asp-validation-for="RatingEnteringNumber" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-2 text-center">
+                                                    <label asp-for="@Model.Specialization" class="control-label text-center"></label>
+                                                    <input asp-for="@Model.Specialization" class="form-control" />
+                                                    <span asp-validation-for="@Model.Specialization" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-2 text-center">
+                                                    <label asp-for="@Model.RatingGradutionYear" class="control-label text-center"></label>
+                                                    <input asp-for="@Model.RatingGradutionYear" class="form-control" />
+                                                    <span asp-validation-for="@Model.RatingGradutionYear" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-2 text-center">
+                                                    <label asp-for="@Model.RatingGradutionNumber" class="control-label text-center"></label>
+                                                    <input asp-for="@Model.RatingGradutionNumber" class="form-control" />
+                                                    <span asp-validation-for="@Model.RatingGradutionNumber" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-1"></div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+
+
+
+                        @*Notes*@
+                        <div class="card">
+                            <div class="card-header" id="headingThree">
+                                <h2 class="mb-0">
+                                    <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#Notes"><i class="fa fa-plus-circle"></i> ملاحظات </button>
+                                </h2>
+                            </div>
+                            <div id="Notes" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <textarea class="form-control" asp-for="@Model.Notes"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        @* new card *@
+                        @*<div class="card">
+                                <div class="card-header" id="headingOne">
+                                    <h2 class="mb-0">
+                                        <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"><i class="fa fa-plus-circle"></i> What is HTML?</button>
+                                    </h2>
+                                </div>
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <p>HTML stands for HyperText Markup Language. HTML is the standard markup language for describing the structure of web pages. <a href="https://www.tutorialrepublic.com/html-tutorial/" target="_blank">Learn more.</a></p>
+                                    </div>
+                                </div>
+                            </div>*@
+                    </div>
+                </div>
+
+
+
+
+
+
+
+                <div class="form-group">
+                    <input type="submit" value="تعديل" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Styles{
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+
+    <style>
+        fieldset {
+            border: 1px dotted black;
+            padding: unset !important;
+            margin-bottom: 4px;
+        }
+
+        table {
+        }
+
+        legend {
+            width: unset !important;
+            text-align: center;
+            color: #3399fe
+        }
+
+        thead, tbody {
+            border-top: solid;
+            border-bottom: solid
+        }
+
+        #EducationalAttainmentsTable, #LanguagesTable, #HobbiesTable {
+            border-collapse: unset !important;
+            border: 1px dashed black;
+        }
+
+        .col-sm-3, .col-sm-2, .col-sm-1 {
+            width: unset !important;
+        }
+
+
+        #EducationalAttainmentsTable th, #LanguagesTable th, #HobbiesTable th {
+            text-align: center;
+        }
+
+        /*font of card link */
+        .btn-link {
+            font-weight: 500;
+        }
+
+        .bs-example {
+            margin: 20px;
+        }
+
+        .accordion .fa {
+            margin-right: 0.5rem;
+        }
+
+        .btnClearDriver {
+            width: 37px;
+            border-radius: 50px;
+        }
+
+        .fadeletetournament {
+            float: right;
+            margin-right: 47%;
+            margin-top: -27px;
+            position: relative;
+            z-index: 2;
+            color: red;
+        }
+
+        .ui-autocomplete {
+            left: 33%;
+            top: 10%;
+        }
+    </style>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/jquery-ui.min.js"></script>
+    @* Auto complate for tournamnet *@
+    <script type="text/javascript">
+        function clearTournament() {
+            $("#txttournament").val("");
+            $("#hfTournamnetId").val("");
+            $("#txttournament").removeAttr("readonly")
+            $(".fadeletetournament").addClass("d-none");
+
+            return false;
+        }
+        $(function () {
+            $("#txttournament").autocomplete({
+                appendTo: '.tournamentdiv',
+                source: function (request, response) {
+                    if (request.term.length >= 3) {
+
+                        $.ajax({
+                            url: '/Tournaments/TournamentAutoComplete/',
+                            data: { prefix: request.term },
+                            type: "POST",
+                            success: function (data) {
+                                response($.map(data, function (item) {
+                                    return item;
+                                }))
+                            },
+                            //error: function (response) {
+                            //    alert(response.responseText);
+                            //},
+                            //failure: function (response) {
+                            //    alert(response.responseText);
+                            //}
+                        });
+                    }
+                },
+                prefix: function (e, ui) {
+                    //fix bug in jQuery.ui somewhere where menu.bindings just grows and grows
+                    $(this).data("ui-autocomplete").menu.bindings = $();
+                },
+
+                select: function (e, i) {
+                    $("#hfTournamnetId").val(i.item.val);
+                    $("#txttournament").attr("readonly", "readonly");
+                    $(".fadeletetournament").removeClass("d-none")
+                },
+                minLength: 1
+            });
+        });
+    </script>
+
+
+    @* start  accoding plus minus icon *@
+    <script>
+        $(document).ready(function () {
+            // Add minus icon for collapse element which is open by default
+            $(".collapse.show").each(function () {
+                $(this).prev(".card-header").find(".fa").addClass("fa-minus-circle").removeClass("fa-plus-circle");
+            });
+
+            // Toggle plus minus icon on show hide of collapse element
+            $(".collapse").on('show.bs.collapse', function () {
+                $(this).prev(".card-header").find(".fa").removeClass("fa-plus-circle").addClass("fa-minus-circle");
+            }).on('hide.bs.collapse', function () {
+                $(this).prev(".card-header").find(".fa").removeClass("fa-minus-circle").addClass("fa-plus-circle");
+            });
+        });
+    </script>
+
+
+
+    @*  //// this script only to show the file selected in input file  *@
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var valbefor = $(this).val(); // C:\fakepath\IMG_0160.JPG
+                console.log(valbefor);
+                // get name of image with extention
+                var filename = $(this).val().split("\\").pop(); // IMG_0160.JPG
+                console.log($(this));
+                // add image name to label
+                $(this).parent('.custom-file').find('.custom-file-label').html(filename);
+            });
+        });
+
+    </script>
+
+
+    @* add and remove row of educational attainment - التحصيل العلمي *@
+    <script type="text/javascript">
+        var counterEducational = Number($(".EducationalAttainmentsCount").attr("data-EducationalAttainments-count"));
+        counterEducational = counterEducational > 0 ? counterEducational : 1;
+        //console.log("EducationalAttainments " + counterEducational)
+
+        $("#addeducationalrow").on("click", function () {
+            var newRow = $("<tr>");
+
+            //new inputs  name and id
+            var NewEducationalAttainmentsCertificateId = "EducationalAttainments" + counterEducational.toString() + "__Certificate";
+            var NewEducationalAttainmentsCertificate = "EducationalAttainments[" + counterEducational.toString() + "].Certificate";
+
+            var NewEducationalAttainmentsSourceId = "EducationalAttainments" + counterEducational.toString() + "__Source";
+            var NewEducationalAttainmentsSource = "EducationalAttainments[" + counterEducational.toString() + "].Source";
+
+            var NewEducationalAttainmentsDateId = "EducationalAttainments" + counterEducational.toString() + "__Date";
+            var NewEducationalAttainmentsDate = "EducationalAttainments[" + counterEducational.toString() + "].Date";
+
+            var NewEducationalAttainmentsGradeId = "EducationalAttainments" + counterEducational.toString() + "__Grade";
+            var NewEducationalAttainmentsGrade = "EducationalAttainments[" + counterEducational.toString() + "].Grade";
+
+            var cols = "";
+
+            // create row of EducationalAttainment (4 input)
+            cols += '<td class="col-sm-3"><input class="form-control EducationalAttainmentsCertificate" name="' + NewEducationalAttainmentsCertificate + '" id="' + NewEducationalAttainmentsCertificateId + '" type="text" /></td>';
+            cols += '<td class="col-sm-3"><input class="form-control EducationalAttainmentsSource" name="' + NewEducationalAttainmentsSource + '" id="' + NewEducationalAttainmentsSourceId + '" type="text" /></td>';
+            cols += '<td class="col-sm-3"><input class="form-control EducationalAttainmentsDate" name="' + NewEducationalAttainmentsDate + '" id="' + NewEducationalAttainmentsDateId + '" type="text" /></td>';
+            cols += '<td class="col-sm-2"><input class="form-control EducationalAttainmentsGrade" name="' + NewEducationalAttainmentsGrade + '" id="' + NewEducationalAttainmentsGradeId + '" type="text" /></td>';
+            cols += '<td class="col-sm-1"><input type="button" class="ibtnDel btn btn-md btn-danger " value="حذف"></td>';
+
+            newRow.append(cols);
+
+            $(".EducationalAttainmentsTable").append(newRow);
+
+            counterEducational++;
+            return false;
+        });
+
+        $(".EducationalAttainmentsTable").on("click", ".ibtnDel", function (event) {
+            $(this).closest("tr").remove();
+            counterEducational--;
+
+
+            //set id and name to certificate field
+            $(".EducationalAttainmentsCertificate").each(function (index) {
+                var NewEducationalAttainmentsCertificateId = "EducationalAttainments" + index.toString() + "__Certificate";
+                var NewEducationalAttainmentsCertificate = "EducationalAttainments[" + index.toString() + "].Certificate";
+                $(this).attr("id", NewEducationalAttainmentsCertificateId);
+                $(this).attr("name", NewEducationalAttainmentsCertificate);
+
+            })
+
+            // set id and name to source field
+            $(".EducationalAttainmentsSource").each(function (index) {
+                var NewEducationalAttainmentsSourceId = "EducationalAttainments" + index.toString() + "__Source";
+                var NewEducationalAttainmentsSource = "EducationalAttainments[" + index.toString() + "].Source";
+                $(this).attr("id", NewEducationalAttainmentsSourceId);
+                $(this).attr("name", NewEducationalAttainmentsSource);
+
+            })
+            // set id and name to Date field
+            $(".EducationalAttainmentsDate").each(function (index) {
+                var NewEducationalAttainmentsDateId = "EducationalAttainments" + index.toString() + "__Date";
+                var NewEducationalAttainmentsDate = "EducationalAttainments[" + index.toString() + "].Date";
+                $(this).attr("id", NewEducationalAttainmentsDateId);
+                $(this).attr("name", NewEducationalAttainmentsDate);
+            })
+
+            // set id and name to Grade field
+            $(".EducationalAttainmentsGrade").each(function (index) {
+                var NewEducationalAttainmentsGradeId = "EducationalAttainments" + index.toString() + "__Grade";
+                var NewEducationalAttainmentsGrade = "EducationalAttainments[" + index.toString() + "].Grade";
+                $(this).attr("id", NewEducationalAttainmentsGradeId);
+                $(this).attr("name", NewEducationalAttainmentsGrade);
+            })
+
+
+        });
+
+    </script>
+
+    @* add and remove row of Languages  - اللغات  *@
+    <script type="text/javascript">
+        var counterlanguage = Number($(".languagesCount").attr("data-languages-count"));
+        counterlanguage = counterlanguage > 0 ? counterlanguage : 1;
+
+        //console.log("language " + counterlanguage)
+        $("#addLanguagerow").on("click", function () {
+            var newRow = $("<tr>");
+
+            //new inputs  name and id
+            var NewLanguageNameId = "Languages" + counterlanguage.toString() + "__Name";
+            var NewLanguageName = "Languages[" + counterlanguage.toString() + "].Name";
+
+            var NewLanguageListenId = "Languages" + counterlanguage.toString() + "__Listen";
+            var NewLanguageListen = "Languages[" + counterlanguage.toString() + "].Listen";
+
+            var NewLanguageSpeakId = "Languages" + counterlanguage.toString() + "__Speak";
+            var NewLanguageSpeak = "Languages[" + counterlanguage.toString() + "].Speak";
+
+            var NewLanguageReadId = "Languages" + counterlanguage.toString() + "__Read";
+            var NewLanguageRead = "Languages[" + counterlanguage.toString() + "].Read";
+
+            var NewLanguageWriteId = "Languages" + counterlanguage.toString() + "__Write";
+            var NewLanguageWrite = "Languages[" + counterlanguage.toString() + "].Write";
+
+
+
+            var cols = "";
+
+            // create row of Language (5 input)
+            cols += '<td class="col-sm-2"><input class="form-control LanguagesName" name="' + NewLanguageName + '" id="' + NewLanguageNameId + '" type="text" /></td>';
+            cols += '<td class="col-sm-2"><input class="form-control LanguagesListen" name="' + NewLanguageListen + '" id="' + NewLanguageListenId + '" type="text" /></td>';
+            cols += '<td class="col-sm-2"><input class="form-control LanguagesSpeak" name="' + NewLanguageSpeak + '" id="' + NewLanguageSpeakId + '" type="text" /></td>';
+            cols += '<td class="col-sm-2"><input class="form-control LanguagesRead" name="' + NewLanguageRead + '" id="' + NewLanguageReadId + '" type="text" /></td>';
+            cols += '<td class="col-sm-2"><input class="form-control LanguagesWrite" name="' + NewLanguageWrite + '" id="' + NewLanguageWriteId + '" type="text" /></td>';
+
+            cols += '<td class="col-sm-2"><input type="button" class="btnDelLanguage btn btn-md btn-danger " value="حذف"></td>';
+
+            newRow.append(cols);
+
+            $(".LanguagesTable").append(newRow);
+
+            counterlanguage++;
+            return false;
+        });
+
+        $(".LanguagesTable").on("click", ".btnDelLanguage", function (event) {
+            $(this).closest("tr").remove();
+            counterlanguage--;
+
+
+            //set id and name to Language Name field
+            $(".LanguagesName").each(function (index) {
+                var NewLanguagesNameId = "Languages" + index.toString() + "__Name";
+                var NewLanguagesName = "Languages[" + index.toString() + "].Name";
+                $(this).attr("id", NewLanguagesNameId);
+                $(this).attr("name", NewLanguagesName);
+
+            })
+
+            // set id and name to Language Listen field
+            $(".LanguagesListen").each(function (index) {
+                var NewLanguagesListenId = "Languages" + index.toString() + "__Listen";
+                var NewLanguagesListen = "Languages[" + index.toString() + "].Listen";
+                $(this).attr("id", NewLanguagesListenId);
+                $(this).attr("name", NewLanguagesListen);
+
+            })
+            // set id and name to Language Speak field
+            $(".LanguagesSpeak").each(function (index) {
+                var NewLanguagesSpeakId = "Languages" + index.toString() + "__Speak";
+                var NewLanguagesSpeak = "Languages[" + index.toString() + "].Speak";
+                $(this).attr("id", NewLanguagesSpeakId);
+                $(this).attr("name", NewLanguagesSpeak);
+
+            })
+
+            // set id and name to Language Read field
+            $(".LanguagesRead").each(function (index) {
+                var NewLanguagesReadId = "Languages" + index.toString() + "__Read";
+                var NewLanguagesRead = "Languages[" + index.toString() + "].Read";
+                $(this).attr("id", NewLanguagesReadId);
+                $(this).attr("name", NewLanguagesRead);
+
+            })
+
+            // set id and name to Language Read field
+            $(".LanguagesWrite").each(function (index) {
+                var NewLanguagesWriteId = "Languages" + index.toString() + "__Write";
+                var NewLanguagesWrite = "Languages[" + index.toString() + "].Write";
+                $(this).attr("id", NewLanguagesWriteId);
+                $(this).attr("name", NewLanguagesWrite);
+
+            })
+
+        });
+
+    </script>
+
+    @* add and remove row of Hobbies  - الهوايات  *@
+    <script type="text/javascript">
+        var counterhobby = Number($(".HobbiesCount").attr("data-Hobbies-count"));
+        counterhobby = counterhobby > 0 ? counterhobby : 1;
+
+        //console.log("Hobbies " + counterhobby)
+
+        $("#addHobbyrow").on("click", function () {
+            var newRow = $("<tr>");
+
+            //new inputs  name and id
+            var NewHobbyNameId = "Hobbies" + counterhobby.toString() + "__Name";
+            var NewHobbyName = "Hobbies[" + counterhobby.toString() + "].Name";
+
+            var NewHobbyExplanationId = "Hobbies" + counterhobby.toString() + "__Explanation";
+            var NewHobbyExplanation = "Hobbies[" + counterhobby.toString() + "].Explanation";
+
+            var NewHobbyLevelId = "Hobbies" + counterhobby.toString() + "__Level";
+            var NewHobbyLevel = "Hobbies[" + counterhobby.toString() + "].Level";
+
+
+
+
+            var cols = "";
+
+            // create row of Hobby (3 input)
+            cols += '<td class="col-sm-3"><input class="form-control HobbiesName" name="' + NewHobbyName + '" id="' + NewHobbyNameId + '" type="text" /></td>';
+            cols += '<td class="col-sm-3"><input class="form-control HobbiesExplanation" name="' + NewHobbyExplanation + '" id="' + NewHobbyExplanationId + '" type="text" /></td>';
+            cols += '<td class="col-sm-3"><input class="form-control HobbiesLevel" name="' + NewHobbyLevel + '" id="' + NewHobbyLevelId + '" type="text" /></td>';
+
+            cols += '<td class="col-sm-3"><input type="button" class="btnDelHobby btn btn-md btn-danger " value="حذف"></td>';
+
+            newRow.append(cols);
+
+            $(".HobbiesTable").append(newRow);
+
+            counterhobby++;
+            return false;
+        });
+
+        $(".HobbiesTable").on("click", ".btnDelHobby", function (event) {
+            $(this).closest("tr").remove();
+            counterhobby--;
+
+
+            //set id and name to Hobby Name  field
+            $(".HobbiesName").each(function (index) {
+                var NewHobbiesNameId = "Hobbies" + index.toString() + "__Name";
+                var NewHobbiesName = "Hobbies[" + index.toString() + "].Name";
+                $(this).attr("id", NewHobbiesNameId);
+                $(this).attr("name", NewHobbiesName);
+
+            })
+
+            // set id and name to Hobby Explanation field
+            $(".HobbiesExplanation").each(function (index) {
+                var NewHobbiesExplanationId = "Hobbies" + index.toString() + "__Explanation";
+                var NewHobbiesExplanation = "Hobbies[" + index.toString() + "].Explanation";
+                $(this).attr("id", NewHobbiesExplanationId);
+                $(this).attr("name", NewHobbiesExplanation);
+
+            })
+            // set id and name to Hobby Level field
+            $(".HobbiesLevel").each(function (index) {
+                var NewHobbiesLevelId = "Hobbies" + index.toString() + "__Level";
+                var NewHobbiesLevel = "Hobbies[" + index.toString() + "].Level";
+                $(this).attr("id", NewHobbiesLevelId);
+                $(this).attr("name", NewHobbiesLevel);
+
+            })
+
+        });
+
+    </script>
+}

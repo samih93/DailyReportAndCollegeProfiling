@@ -1,0 +1,162 @@
+﻿.container {
+    max-width: 1363px !important;
+    direction: rtl;
+}
+
+body {
+    text-align: right;
+}
+
+.MilitaryCollegeBody > header {
+    background-image: -webkit-linear-gradient(45deg,#3399fe 10%,transparent 20%,#3399fe 60%, transparent 85%,#3399fe);
+    background-color: black;
+}
+
+.headertitle {
+    color: white;
+    padding-top: 10px;
+    text-shadow: 1px 1px red;
+}
+
+.border-bottom {
+    border-bottom: unset !important;
+}
+
+.navbar-inverse {
+    /*background-color: #4b6c9e;*/
+    /* background: linear-gradient(to right, rgb(47, 47, 47), rgb(17, 118, 243)); */
+    background-color: #222;
+}
+
+    .navbar-inverse .navbar-nav > li > a {
+        color: white;
+        font-size: 18px;
+    }
+
+
+
+.img_headr_left {
+    float: left;
+    padding-left: 10px;
+}
+
+.img_headr_right {
+    float: right;
+    padding-right: 10px;
+}
+
+.bg-white {
+    background-color: unset !important;
+}
+
+.border-bottom {
+    border-bottom: unset !important;
+}
+
+.HomeMenu .nav-link {
+    color: white !important;
+    font-size: 18px;
+}
+
+
+.custom-file-label {
+    padding-right: 100px !important;
+}
+
+/*for input error*/
+.input-validation-error {
+    border-color: red;
+}
+
+input.form-control {
+    height: auto !important;
+    text-align: right;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+@media print {
+    .no-print, .no-print * {
+        display: none !important;
+    }
+    @page {
+        size: auto A4 ;
+        margin-top: 4mm;
+        margin-bottom:0mm;
+    }
+ 
+
+}
+
+
+
+.ui-datepicker .ui-datepicker-prev span, .ui-datepicker .ui-datepicker-next span {
+    color: transparent;
+}
+
+a.ui-datepicker-prev:hover, a.ui-datepicker-next:hover {
+    cursor: pointer !important;
+}
+
+.Incident_End_At_ReportDate {
+    background-color: #a3eca3 !important;
+}
+
+/*.active {
+    background-color: white !important;
+}*/
+
+.nav-link.active {
+    box-shadow: 0 10px 2px -2px #05baff;
+}
+
+/* hover on mneu --> background lightblue , color white*/
+.nav-item > a:hover {
+    box-shadow: 0 10px 2px -2px #05baff;
+}
+
+.btn-logout {
+    color: red !important;
+    background-color: white !important;
+}
+
+a.btn-logout:hover {
+    color: white !important;
+    background-color: red !important;
+    box-shadow: unset !important;
+}
+
+
+.HomeMenu .active:after {
+    content: '';
+    position: relative;
+    width: 0;
+    height: 75px;
+    left: 40%;
+    top: 2px;
+    border-left: 8px outset transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #05baff;
+}
+
+.ReportDropdownList {
+    background-image: -webkit-linear-gradient(45deg,#3399fe 10%,transparent 20%,#3399fe 60%);
+    background-color: black;
+    text-align: right;
+    right: 2%;
+    min-width: 11rem;
+}
+
+.dropdown-item:hover {
+    background-color: unset !important;
+    box-shadow: 0 10px 2px -2px #05baff;
+}
+
+thead {
+    background-color: #85c2ff !important;
+}
+
+
+

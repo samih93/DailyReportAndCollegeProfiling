@@ -1,0 +1,67 @@
+﻿@model IEnumerable<MilitaryCollege.Models.Officer>
+<table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+    <thead>
+        <tr>
+            <th rowspan="2">
+                الاسم و الشهرة
+            </th>
+            <th colspan="2">
+                التصنيف عند الدخول
+            </th>
+            <th rowspan="2">
+                الاختصاص
+            </th>
+            <th colspan="2">
+                التصنيف عند التخرج
+            </th>
+        </tr>
+        <tr>
+            <th>عام</th>
+            <th>قوى امن</th>
+            <th>عام</th>
+            <th>قوى امن</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var officer in Model)
+        {
+        <tr>
+            <td>
+                <b>@Html.DisplayFor(model => officer.Name)</b>
+            </td>
+            <td>
+                @Html.DisplayFor(model => officer.RatingEnteringYear)
+            </td>
+            <td>
+                @Html.DisplayFor(model => officer.RatingEnteringNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(model => officer.Specialization)
+            </td>
+            <td>
+                @Html.DisplayFor(model => officer.RatingGradutionYear)
+            </td>
+            <td>
+                @Html.DisplayFor(model => officer.RatingGradutionNumber)
+            </td>
+        </tr>
+        }
+        
+
+    </tbody>
+</table>
+
+@section Styles
+{
+<style>
+    table.dataTable td, table.dataTable th {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+    thead {
+        font-size:1.3em;
+    }
+  
+</style>
+
+}

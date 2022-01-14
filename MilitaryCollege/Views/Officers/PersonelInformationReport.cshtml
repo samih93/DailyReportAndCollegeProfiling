@@ -1,0 +1,118 @@
+﻿@model IEnumerable<MilitaryCollege.Models.Officer>
+
+@{
+    ViewData["Title"] = "PersonelInformationReport";
+}
+
+<table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+    <thead>
+        <tr>
+            <th>م</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MilitaryNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BirthDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BirthAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BloodType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Height)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nationality)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.PreviousJob)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HealthProblem)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{ var index = 1;}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@index</td>
+                <td>
+                    <b>@Html.DisplayFor(modelItem => item.Name)</b>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MilitaryNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BirthDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BirthAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BloodType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Height)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nationality)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.PreviousJob)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HealthProblem)
+                </td>
+
+            </tr>
+            index++;
+        }
+    </tbody>
+</table>
+
+@section Styles{ 
+
+<style>
+    table.dataTable td, table.dataTable th {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+
+
+
+    thead {
+        /*height: 100px;*/
+        font-size: 1.1em;
+    }
+
+</style>
+}

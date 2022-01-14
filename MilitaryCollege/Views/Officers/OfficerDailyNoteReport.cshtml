@@ -1,0 +1,152 @@
+﻿@model IEnumerable<MilitaryCollege.Models.ViewModels.OfficerVmForDailyNotesReport>
+<table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+    <thead>
+
+        <tr>
+            <th rowspan="2" style="min-width: 150px">الاسم و الشهرة</th>
+            <th colspan="3" style="width:50%">
+                @Html.DisplayName("ايجابيات")
+            </th>
+            <th colspan="3" style="width:50%">
+                @Html.DisplayName("سلبيات")
+            </th>
+
+        </tr>
+        <tr>
+            <th style="min-width: 100px">
+                @Html.DisplayName("التاريخ")
+            </th>
+            <th>
+                @Html.DisplayName("الشرح")
+            </th>
+            <th>
+                مهم
+            </th>
+            <th style="min-width:100px">
+                @Html.DisplayName("التاريخ")
+            </th>
+            <th>
+                @Html.DisplayName("الشرح")
+            </th>
+            <th>
+                مهم
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+        @{   
+            var i = 0;
+            string trclass = "";
+            }
+        @foreach (var item in Model)
+        {
+            trclass = i % 2 == 0 ? "even" : "odd";
+
+            <tr class="@trclass" style="border-top:2px solid #3397fb">
+                @if (item.CountMaxNotes == 0)
+                {
+                    <td>@item.Name</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                }
+                else
+                {
+                    <td rowspan="@item.CountMaxNotes">@item.Name</td>
+                    string IsImportantOrNot_Image = item.DailyNotes.First().IsImportant ? "IsImportantImage.png" : "IsNotImportantImage.png";
+                    if (item.DailyNotes.First().IsPositive)
+                    {
+                        <td>@item.DailyNotes.First().CreationDate.ToString("yyyy-MM-dd")</td>
+                        <td>@item.DailyNotes.First().Note</td>
+                        <td><img src="~/Media/@IsImportantOrNot_Image" /></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    }
+                    else
+                    {
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>@item.DailyNotes.First().CreationDate.ToString("yyyy-MM-dd")</td>
+                        <td>@item.DailyNotes.First().Note</td>
+                        <td><img src="~/Media/@IsImportantOrNot_Image" /></td>
+                    }
+                }
+
+            </tr>
+
+            int j = 0;
+            foreach (var dn in item.DailyNotes)
+            {
+                if (j != 0)
+                {
+                    string IsImportantOrNot_Image = dn.IsImportant ? "IsImportantImage.png" : "IsNotImportantImage.png";
+
+                    @if (dn.IsPositive)
+                    {
+                        <tr class="@trclass">
+                            <td>@dn.CreationDate.ToString("yyyy-MM-dd")</td>
+                            <td>@dn.Note</td>
+                            <td><img src="~/Media/@IsImportantOrNot_Image" /></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr class="@trclass">
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>@dn.CreationDate.ToString("yyyy-MM-dd")</td>
+                            <td>@dn.Note</td>
+                            <td><img src="~/Media/@IsImportantOrNot_Image" /></td>
+                        </tr>
+                    }
+                }
+                j++;
+
+            }
+            i++;
+        }
+    </tbody>
+</table>
+
+@section Styles
+{
+    <style>
+        .odd {
+            background-color: #dee2e6 !important;
+        }
+
+        .even {
+            background-color: unset !important;
+        }
+
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+
+        thead {
+            font-size: 1.5em;
+        }
+
+        tr.odd > td {
+            border-color: #b5b5b5 !important;
+        }
+
+       
+
+        table tr:last-child {
+            border-bottom: 2px solid #3397fb;
+        }
+    </style>
+}

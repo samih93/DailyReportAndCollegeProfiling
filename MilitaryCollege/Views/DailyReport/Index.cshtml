@@ -1,0 +1,250 @@
+﻿@model MilitaryCollege.Models.ViewModels.DailyReportVM
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "عرض التقرير اليومي";
+
+}
+
+
+<div class="container">
+    <form asp-action="Index">
+
+        <div class="row mb-2">
+            <div class="col-md-4">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    if (!User.IsInRole("Viewer"))
+                    {
+                        <div>
+                            <a asp-action="Create" class="btn btn-primary"> اضافة التقرير</a>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="col-md-4">
+                <h1 class="text-center">  عرض التقرير اليومي</h1>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <input type="text"  asp-for="@Model.ReportDate" value="@Model.ReportDate.ToString("yyyy/MM/dd")" class="form-control datepicker" />
+            </div>
+            <div class="col-md-1">
+                <input type="submit" value="بحث" asp-route-id="@Model.TournamentId" class="btn btn-primary" />
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row mb-1">
+
+            <div class="col-md-2">
+                <b> اساسي : </b>
+            </div>
+            <div class="col-md-2">
+                @Html.DisplayFor(model => model.BaseNumber)
+            </div>
+        </div>
+        <div class="row mb-1">
+
+            <div class="col-md-2">
+                <b>جاهز : </b>
+            </div>
+            <div class="col-md-2">
+                @Html.DisplayFor(model => model.ReadyNumber)
+            </div>
+        </div>
+        <div class="row mb-5">
+
+            <div class="col-md-2">
+                <b>غير جاهز : </b>
+            </div>
+            <div class="col-md-2">
+                @Html.DisplayFor(model => model.NotReadyNumber)
+            </div>
+        </div>
+
+
+    </form>
+    <div class="row">
+        @* ألوقوعات اليومية   *@
+        <table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+            <thead>
+                <tr>
+                    <th colspan="8" class="text-center" style="background-color: #85c2ff">الوقوعات اليومية</th>
+                </tr>
+                <tr>
+                    <th>م</th>
+                    <th><label asp-for="@Model.DailyIncidents.First().Officer.Name"></label></th>
+                    <th><label asp-for="@Model.DailyIncidents.First().ReasonOfIncident.Name"></label></th>
+                    <th><label asp-for="@Model.DailyIncidents.First().Explanation"></label></th>
+                    <th><label asp-for="@Model.DailyIncidents.First().StartDate"></label></th>
+                    <th><label asp-for="@Model.DailyIncidents.First().EndDate"></label></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.DailyIncidents != null && Model.DailyIncidents.Count > 0)
+                {
+                    int index = 1;
+
+                    @foreach (var item in Model.DailyIncidents)
+                    {
+                        string Incident_End_At_ReportDate = item.EndDate.Value.Date == Model.ReportDate.Date ? "Incident_End_At_ReportDate" : "";
+
+                        <tr class="@Incident_End_At_ReportDate">
+                            <td>
+                                @index
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(m => item.Officer.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => item.ReasonOfIncident.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => item.Explanation)
+                            </td>
+                            <td>
+                                @item.StartDate.Value.ToString("yyyy/MM/dd")
+                            </td>
+                            <td>
+                                @item.EndDate.Value.ToString("yyyy/MM/dd")
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8">
+                            لا يوجد معلومات
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (!User.IsInRole("User"))
+        {
+            <div class="row mb-5">
+                @* الملاحظات اليومية   *@
+                <table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th colspan="5" class="text-center" style="background-color: #85c2ff">الملاحظات اليومية</th>
+                        </tr>
+                        <tr>
+                            <th>م</th>
+                            <th colspan="2" style="width:50%">
+                                @Html.DisplayName("ايجابيات")
+                            </th>
+                            <th colspan="2" style="width:50%">
+                                @Html.DisplayName("سلبيات")
+                            </th>
+
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>
+                                @Html.DisplayName("الاسم")
+                            </th>
+                            <th>
+                                @Html.DisplayName("الشرح")
+                            </th>
+                            <th>
+                                @Html.DisplayName("الاسم")
+                            </th>
+                            <th>
+                                @Html.DisplayName("الشرح")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.DailyNotes != null && Model.DailyNotes.Count > 0)
+                        {
+                            int index = 1;
+                            @foreach (var item in Model.DailyNotes)
+                            {
+                                if (item.IsPositive)
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>
+                                            @item.Officer.Name
+                                        </td>
+                                        <td>
+                                            @item.Note
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                            @item.Officer.Name
+                                        </td>
+                                        <td>
+                                            @item.Note
+                                        </td>
+
+                                    </tr>
+                                }
+
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5">
+                                    لا يوجد ملاحظات
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        }
+    }
+</div>
+
+
+@section Styles
+{
+    <style>
+
+
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+    </style>
+}
+
+@section Scripts
+{
+    <script>
+
+        $('.DailyReportIndexLink').addClass("active");
+
+    </script>
+}

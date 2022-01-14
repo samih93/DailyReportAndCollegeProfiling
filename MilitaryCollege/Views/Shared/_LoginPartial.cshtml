@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+
+
+
+<ul class="HomeMenu navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        if (User.IsInRole("SuperAdmin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-lightblue" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @User.Identity.Name</a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-lightblue" href="#" title="Manage"> @User.Identity.Name</a>
+            </li>
+        }
+        <li class="nav-item">
+            <a class="btn btn-danger btn-logout" asp-controller="Account" asp-action="Logout">Logout</a>
+        </li>
+    }
+
+</ul>

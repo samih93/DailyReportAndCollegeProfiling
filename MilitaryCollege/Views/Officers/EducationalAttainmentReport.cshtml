@@ -1,0 +1,121 @@
+﻿
+
+@model IEnumerable<MilitaryCollege.Models.Officer>
+
+<div class="container">
+    @*<div class="row">
+            <input type="button" value="تحميل الجدول" class="btn btn-danger" onclick="return PrintEducationalList()" />
+        </div>*@
+    <div class="row">
+        <table id="educationaltable" class=" dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="width:160px">
+                        الاسم و الشهرة
+                    </th>
+                    <th>
+                        الشهادة
+                    </th>
+                    <th>
+                        المصدر
+                    </th>
+                    <th>
+                        التاريخ
+                    </th>
+                    <th>
+                        العلامة
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 0;
+                    string trclass = "";
+                }
+                @foreach (var officer in Model)
+                {
+                    trclass = i % 2 == 0 ? "even" : "odd";
+
+                <tr class="@trclass" style="border-top:2px solid black">
+                    @if (officer.EducationalAttainments.Count == 0)
+                    {
+                        <td><b>@officer.Name</b></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+
+                    }
+                    else
+                    {
+                        <td rowspan="@officer.EducationalAttainments.Count"><b>@officer.Name</b></td>
+                        <td>@officer.EducationalAttainments.First().Certificate</td>
+                        <td>@officer.EducationalAttainments.First().Source</td>
+                        <td>@officer.EducationalAttainments.First().Date</td>
+                        <td>@officer.EducationalAttainments.First().Grade</td>
+                    }
+
+
+                </tr>
+                    var j = 0;
+
+                        @foreach (var ed in officer.EducationalAttainments)
+                        {
+
+
+                            if (j != 0)
+                            {
+                                <tr class="@trclass">
+                                    <td>@ed.Certificate</td>
+                                    <td>@ed.Source</td>
+                                    <td>@ed.Date</td>
+                                    <td>@ed.Grade</td>
+                                </tr>
+                            }
+                            j++;
+
+                        }
+                        i++;
+                    }
+
+
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Styles
+{
+    @*<link href="~/css/printStyle.css" class="printStyle" rel="stylesheet" />*@
+
+    <style>
+        .odd {
+            background-color: #dee2e6 !important;
+        }
+
+        .even {
+            background-color: unset !important;
+        }
+
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+
+      
+        tr.odd > td {
+            border-color: #b5b5b5 !important;
+        }
+        thead {
+            /*height: 100px;*/
+            font-size: 1.5em;
+        }
+        table tr:last-child {
+            border-bottom: 2px solid black;
+        }
+        
+    </style>
+
+}

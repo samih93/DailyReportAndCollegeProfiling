@@ -1,0 +1,114 @@
+﻿@model IEnumerable<MilitaryCollege.Models.Officer>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>الضباط</h1>
+@if (SignInManager.IsSignedIn(User))
+{
+    if (!User.IsInRole("Viewer"))
+    {
+        <p>
+            <a asp-action="Create">اضافة ضابط</a>
+        </p>
+    }
+}
+
+<table class="OfficerTable display nowrap table table-striped table-bordered " style="width:100%">
+    <thead>
+        <tr>
+            <th>م</th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProfileImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MilitaryNumber)
+            </th>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                @if (!User.IsInRole("User"))
+                {
+                    <th></th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @{ int index = 1;}
+        @foreach (var item in Model)
+        {
+            var profileimage = !String.IsNullOrEmpty(item.ProfileImage) ? item.ProfileImage : "defaultofficer.png";
+            <tr>
+                <td>@index</td>
+                <td>
+                    <img src="~/Media/Officer_Profile/@profileimage" style="width:60px;height:60px" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MilitaryNumber)
+                </td>
+
+
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    @if (!User.IsInRole("User"))
+                    {
+                        <td>
+
+                            @if (!User.IsInRole("Viewer"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id">تعديل</a> @("|")
+                            }
+
+                            <a asp-action="Details" asp-route-id="@item.Id">الملف الشخصي</a>
+
+                            @if (User.IsInRole("SuperAdmin"))
+                            {
+                                @("|") <a asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+
+                            }
+
+                        </td>
+                    }
+                }
+            </tr>
+            index++;
+        }
+    </tbody>
+</table>
+
+@section Styles {
+    <link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+    <style>
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+    </style>
+
+}
+@section Scripts {
+    <script src="~/js/DataTable/jquery.dataTables.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('.OfficerTable').DataTable({
+                responsive: true,
+                aaSorting: [],
+                language: DataTablesLang,
+
+            });
+        });
+
+        $('.OfficerIndexLink').addClass("active");
+    </script>
+}

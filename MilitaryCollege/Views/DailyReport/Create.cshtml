@@ -1,0 +1,697 @@
+﻿@model MilitaryCollege.Models.ViewModels.DailyReportVM
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<hr />
+<div class="container">
+
+    <div class="row mb-2">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+            <h1 class="text-center">   اضافة التقرير اليومي</h1>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                @* report date *@
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <input type="text" asp-for="@Model.ReportDate" value="@Model.ReportDate.ToString("yyyy/MM/dd")" class="form-control datepicker" />
+                    </div>
+                    <div class="col-md-1">
+                        <input type="submit" value="بحث" name="SubmitButton" class="btn btn-primary" />
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+                @* report date *@
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <label class="control-label" asp-for="@Model.TournamentName">الدورة</label>
+                        <input type="text" asp-for="@Model.TournamentName" readonly class="form-control col-md-6" value="@Model.TournamentName" autocomplete="on" />
+                        @* CLOSE ICON TO DELETE TOURNAMENT TO SET A NEW ONE *@
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+
+                            @if (User.IsInRole("SuperAdmin"))
+                            {
+                                <span class="fa fa-close fadeletetournament" onclick="return clearTournament();"></span>
+                            }
+                        }
+
+
+                        <input type="hidden" value="@Model.TournamentId" asp-for="@Model.TournamentId" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+
+                    <div class="col-md-2">
+                        <label class="control-label">اساسي</label>
+                        <input asp-for="@Model.BaseNumber" class="form-control" readonly />
+                        <span asp-validation-for="@Model.BaseNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="control-label">جاهز</label>
+                        <input asp-for="@Model.ReadyNumber" class="form-control" />
+                        <span asp-validation-for="@Model.ReadyNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="control-label">غير جاهز</label>
+                        <input asp-for="@Model.NotReadyNumber" class="form-control" readonly />
+                        <span asp-validation-for="@Model.NotReadyNumber" class="text-danger"></span>
+                    </div>
+                </div>
+
+                @*Daily Incidents -- ألوقوعات اليومية*@
+                <table id="DailyIncidentTable" class="table order-list DailyIncidentTable">
+                    <thead>
+                        <tr>
+                            <th colspan="7" class="text-center" style="background-color: #85c2ff">الوقوعات اليومية</th>
+                        </tr>
+                        <tr>
+                            <th>م</th>
+                            <th><label asp-for="@Model.DailyIncidents.First().OfficerName"></label></th>
+                            <th><label asp-for="@Model.DailyIncidents.First().ReasonOfIncident.Name"></label></th>
+                            <th><label asp-for="@Model.DailyIncidents.First().Explanation"></label></th>
+                            <th><label asp-for="@Model.DailyIncidents.First().StartDate"></label></th>
+                            <th><label asp-for="@Model.DailyIncidents.First().EndDate"></label></th>
+                            <th>
+                                <label asp-for="@Model.DailyIncidents.First().IsFinish"></label>
+                            </th>
+
+                        </tr>
+
+                    </thead>
+                    <tbody>
+
+                        @{
+                            int countDailyincidentToday = (Model != null && Model.TodayDailyIncidents != null) ? Model.TodayDailyIncidents.Count : 0;
+                            int realcountdailytoday = countDailyincidentToday;
+                            int index = 0;
+                            int seq = 0;
+
+                        }
+
+                        @* loop in todayincidents -- if today has incidents or if post and an error happend*@
+                        @while (countDailyincidentToday > 0)
+                        {
+                            string officerId = "";
+                            foreach (var item in Model.TodayDailyIncidents)
+                            {
+
+                                seq++;
+                                officerId = "officerId" + index;
+                                string Incident_End_At_ReportDate = item.EndDate.Value.Date == Model.ReportDate.Date ? "Incident_End_At_ReportDate" : "";
+
+
+                                <tr class=" officertr @Incident_End_At_ReportDate">
+                                    <td>@seq</td>
+                                    <td class="col-sm-3">
+                                        <input asp-for="@Model.TodayDailyIncidents[index].OfficerName" data-index="@index" autocomplete="off" class="officerName form-control" readonly />
+                                        <span class="fa fa-lock"></span>
+                                        <input type="hidden" asp-for="@Model.TodayDailyIncidents[index].OfficerId" class="@officerId" />
+                                        @* daily incident id *@
+                                        <input type="hidden" asp-for="@Model.TodayDailyIncidents[index].Id" />
+
+                                        @* to catch it in javascript if has a  sabotage *@
+                                        <input id="MinimumCountDailyIncidents" value="@realcountdailytoday" type="hidden" />
+
+                                    </td>
+                                    <td class="col-sm-2">
+                                        <input asp-for="@Model.TodayDailyIncidents[index].ReasonOfIncident.Name" class=" form-control" readonly />
+                                        <input type="hidden" asp-for="@Model.TodayDailyIncidents[index].ReasonOfIncidentId" />
+                                        <span class="fa fa-lock"></span>
+
+                                    </td>
+                                    <td class="col-sm-3">
+                                        <input asp-for="@Model.TodayDailyIncidents[index].Explanation" class=" form-control" />
+                                    </td>
+                                    <td class="col-sm-1">
+                                        <input asp-for="@Model.TodayDailyIncidents[index].StartDate" type="text" value="@Model.TodayDailyIncidents[index].StartDate.Value.ToString("yyyy/MM/dd")" class=" form-control" readonly />
+                                        <span class="fa fa-lock"></span>
+
+                                    </td>
+                                    <td class="col-sm-1">
+                                        <input asp-for="@Model.TodayDailyIncidents[index].EndDate" type="text" value="@Model.TodayDailyIncidents[index].EndDate.Value.ToString("yyyy/MM/dd")" class=" form-control" readonly />
+                                        <span class="fa fa-lock"></span>
+
+                                    </td>
+                                    <td class="col-sm-1">
+                                        <input type="checkbox" asp-for="@Model.TodayDailyIncidents[index].IsFinish" class=" form-control" />
+                                    </td>
+
+                                </tr>
+                                index++;
+                                countDailyincidentToday--;
+                            }
+
+                        }
+
+                        @* if post and an error happened  *@
+                        @if (Model != null && Model.DailyIncidents != null && Model.DailyIncidents.Count > 0)
+                        {
+                            int j = 0;
+                            foreach (var item in Model.DailyIncidents)
+                            {
+                                //realcountdailytoday the index of record in daily incidents
+                                string officerId = "DailyincidentofficerId" + j;
+                                string spanfaclassfordelete = "fadeleteofficer" + j;
+                                string DailyincidentOfficerNameId = "DailyIncidents_" + j + "__OfficerName";
+                                // check if enddate equal current report date
+
+                                seq++;
+                                <tr class="officertr">
+                                    <td>@seq</td>
+                                    <td class="col-sm-3">
+                                        @if (!String.IsNullOrEmpty(Model.DailyIncidents[j].OfficerName))
+                                        {
+                                            <input asp-for="@Model.DailyIncidents[j].OfficerName" id="@DailyincidentOfficerNameId" data-index="@j" autocomplete="off" class="DailyincidentofficerName form-control" readonly />
+                                            <span class="fa fa-close @spanfaclassfordelete" onclick="return clearofficer(@j);"></span>
+
+                                        }
+                                        else
+                                        {
+                                            <input asp-for="@Model.DailyIncidents[j].OfficerName" id="@DailyincidentOfficerNameId" data-index="@j" autocomplete="off" class="DailyincidentofficerName form-control" />
+                                            <span class="fa fa-close @spanfaclassfordelete d-none" onclick="return clearofficer(@j);"></span>
+
+                                        }
+                                        <input type="hidden" asp-for="@Model.DailyIncidents[j].OfficerId" class="@officerId" />
+                                    </td>
+                                    <td class="col-sm-2">
+                                        @Html.DropDownListFor(m => m.DailyIncidents[j].ReasonOfIncidentId, Model.DDLReason, new { @class = "form-control " })
+                                    </td>
+                                    <td class="col-sm-3"><input asp-for="@Model.DailyIncidents[j].Explanation" class=" form-control" /></td>
+                                    <td class="col-sm-1"><input asp-for="@Model.DailyIncidents[j].StartDate" type="text" class=" form-control datepicker" /></td>
+                                    <td class="col-sm-1"><input asp-for="@Model.DailyIncidents[j].EndDate" type="text" class=" form-control datepicker" /></td>
+                                    <td class="col-sm-1"><input type="checkbox" asp-for="@Model.DailyIncidents[j].IsFinish" class=" form-control" /></td>
+
+                                </tr>
+                                j++;
+                            }
+                        }
+                        else
+                        {
+                            //create BaseNumber record of DailyIncidents
+                            @for (int i = 0; i < Model.BaseNumber - realcountdailytoday; i++)
+                            {
+                                //hide all record exept 0
+                                string trClass = i != 0 ? "d-none" : "";
+                                string officerId = "DailyincidentofficerId" + i;
+                                string spanfaclassfordelete = "fadeleteofficer" + i;
+                                string DailyincidentOfficerNameId = "DailyIncidents_" + i + "__OfficerName";
+
+
+                                seq++;
+                                <tr class="@trClass officertr">
+                                    <td>@seq</td>
+                                    <td class="col-sm-3">
+                                        <input asp-for="@Model.DailyIncidents[i].OfficerName" id="@DailyincidentOfficerNameId" data-index="@i" autocomplete="off" class="DailyincidentofficerName form-control" />
+                                        <span class="fa fa-close @spanfaclassfordelete d-none" onclick="return clearofficer(@i);"></span>
+                                        <input type="hidden" asp-for="@Model.DailyIncidents[i].OfficerId" class="@officerId" />
+                                    </td>
+                                    <td class="col-sm-2">
+                                        @Html.DropDownListFor(m => m.DailyIncidents[i].ReasonOfIncidentId, Model.DDLReason, new { @class = "form-control " })
+                                    </td>
+                                    <td class="col-sm-3"><input asp-for="@Model.DailyIncidents[i].Explanation" class=" form-control" /></td>
+                                    <td class="col-sm-1"><input asp-for="@Model.DailyIncidents[i].StartDate" type="text" class=" form-control datepicker" /></td>
+                                    <td class="col-sm-1"><input asp-for="@Model.DailyIncidents[i].EndDate" type="text" class=" form-control datepicker" /></td>
+                                    <td class="col-sm-1"><input type="checkbox" asp-for="@Model.DailyIncidents[i].IsFinish" class=" form-control " /></td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+
+                </table>
+
+
+                @{string x = ""; }
+
+                @*Daily Notes -- الملاحظات اليومية*@
+                @if (SignInManager.IsSignedIn(User))
+                {
+
+                    @if (!User.IsInRole("User"))
+                    {
+
+                        <table id="DailyNotesTable" class="table dataTable order-list DailyNotesTable  @x">
+                            <thead>
+                                <tr>
+                                    <th colspan="5" class="text-center" style="background-color: #85c2ff">الملاحظات اليومية</th>
+                                </tr>
+                                <tr>
+                                    <th>م</th>
+                                    <th>الاسم</th>
+                                    <th>الملاحظة</th>
+                                    <th>ايجابية</th>
+                                    <th>مهم</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @* if post and an error happened  *@
+                                @{
+                                    int CountDailyNotePosted = Model.CountDailyNotePosted != 0 ? Model.CountDailyNotePosted : 0;
+                                    int seq_dailynote = 0;
+                                }
+                                @if (Model != null && Model.DailyNotes != null && CountDailyNotePosted > 0)
+                                {
+                                    int j = 0;
+                                    // dailynote count = base number so i check the record if has data to increase
+                                    foreach (var item in Model.DailyNotes)
+                                    {
+                                        string officerId = "DailyNotesofficerId" + j;
+                                        string spanfaclassfordelete = "fadeleteofficerInDailyNotes" + j;
+                                        string DailyNotesOfficerName = "DailyNotes_" + j + "__OfficerName";
+                                        string trClass = j > (Model.CountDailyNotePosted) ? "d-none" : "";
+                                        seq_dailynote++;
+
+
+                                        <tr class="@trClass officertr">
+                                            <td>@seq_dailynote</td>
+                                            <td class="col-sm-3">
+                                                @if (!String.IsNullOrEmpty(Model.DailyNotes[j].OfficerName))
+                                                {
+                                                    <input asp-for="@Model.DailyNotes[j].OfficerName" id="@DailyNotesOfficerName" data-index="@j" autocomplete="off" class="DailyNotesofficerName form-control" readonly />
+                                                    <span class="fa fa-close @spanfaclassfordelete" onclick="return clearofficerInDailyNote(@j);"></span>
+
+                                                }
+                                                else
+                                                {
+                                                    <input asp-for="@Model.DailyNotes[j].OfficerName" id="@DailyNotesOfficerName" data-index="@j" autocomplete="off" class="DailyNotesofficerName form-control" />
+                                                    <span class="fa fa-close @spanfaclassfordelete d-none" onclick="return clearofficerInDailyNote(@j);"></span>
+
+                                                }
+
+                                                <input type="hidden" asp-for="@Model.DailyNotes[j].OfficerId" class="@officerId" />
+                                            </td>
+                                            <td class="col-sm-2"><input asp-for="@Model.DailyNotes[j].Note" class=" form-control" /></td>
+                                            <td class="col-sm-1"><input type="checkbox" asp-for="@Model.DailyNotes[j].IsPositive" class=" form-control" /></td>
+                                            <td class="col-sm-1"><input type="checkbox" asp-for="@Model.DailyNotes[j].IsImportant" class=" form-control" /></td>
+
+                                        </tr>
+                                        j++;
+                                        CountDailyNotePosted--;
+
+
+                                    }
+
+
+                                }
+                                else
+                                {
+                                    @*create BaseNumber record of Daily Notes*@
+                                    @for (int i = 0; i < Model.BaseNumber; i++)
+                                    {
+                                        //hide all record exept 0
+                                        string trClass = i != 0 ? "d-none" : "";
+                                        string officerId = "DailyNotesofficerId" + i;
+                                        string spanfaclassfordelete = "fadeleteofficerInDailyNotes" + i;
+                                        string DailyNotesOfficerName = "DailyNotes_" + i + "__OfficerName";
+                                        seq_dailynote++;
+
+
+                                        <tr class="@trClass officertr">
+                                            <td>@seq_dailynote</td>
+                                            <td class="col-sm-3">
+                                                <input asp-for="@Model.DailyNotes[i].OfficerName" id="@DailyNotesOfficerName" data-index="@i" autocomplete="off" class="DailyNotesofficerName form-control" />
+                                                <span class="fa fa-close @spanfaclassfordelete d-none" onclick="return clearofficerInDailyNote(@i);"></span>
+                                                <input type="hidden" asp-for="@Model.DailyNotes[i].OfficerId" class="@officerId" />
+                                            </td>
+                                            <td class="col-sm-2"><input asp-for="@Model.DailyNotes[i].Note" class=" form-control" /></td>
+                                            <td class="col-sm-1"><input type="checkbox" asp-for="@Model.DailyNotes[i].IsPositive" class=" form-control" /></td>
+                                            <td class="col-sm-1"><input type="checkbox" asp-for="@Model.DailyNotes[i].IsImportant" class=" form-control" /></td>
+
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+
+                    }
+                }
+                <div class="form-group mt-4">
+                    <input type="submit" name="SubmitButton" value="اضافة" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Styles
+{
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+
+    <style>
+
+
+        .fadeletetournament {
+            float: right;
+            margin-right: 47%;
+            margin-top: -27px;
+            position: relative;
+            z-index: 2;
+            color: red;
+        }
+
+        span[class*="fadeleteofficer"] {
+            float: right;
+            margin-right: 88%;
+            margin-top: -27px;
+            position: relative;
+            z-index: 2;
+            color: red;
+        }
+
+
+
+
+        .col-sm-3, .col-sm-2, .col-sm-1 {
+            width: unset !important;
+        }
+
+
+        #DailyIncidentTable th, #DailyIncidentTable td, #DailyNotesTable th, #DailyNotesTable td {
+            text-align: center;
+        }
+
+        .accordion .fa {
+            margin-right: 0.5rem;
+        }
+
+        .ui-draggable, .ui-droppable {
+            background-position: top;
+        }
+
+        .fa-lock {
+            float: right;
+            margin-right: 90%;
+            margin-top: -27px;
+            position: relative;
+            z-index: 0 !important;
+            color: red;
+        }
+
+        select {
+            width: 100% !important;
+        }
+    </style>
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+
+    @* Auto complate for tournamnet *@
+    <script type="text/javascript">
+        function clearTournament() {
+            $("#TournamentName").val("");
+            $("#TournamentId").val("");
+            $("#TournamentName").removeAttr("readonly")
+            $(".fadeletetournament").addClass("d-none");
+
+            return false;
+        }
+        $(document).ready(function () {
+            $("#TournamentName").autocomplete({
+                source: function (request, response) {
+                    if (request.term.length >= 3) {
+
+                        $.ajax({
+                            url: '/Tournaments/TournamentAutoComplete/',
+                            data: { prefix: request.term },
+                            type: "POST",
+                            success: function (data) {
+                                response($.map(data, function (item) {
+                                    return item;
+                                }))
+                            },
+                            //error: function (response) {
+                            //    alert(response.responseText);
+                            //},
+                            //failure: function (response) {
+                            //    alert(response.responseText);
+                            //}
+                        });
+                    }
+                },
+                prefix: function (e, ui) {
+                    //fix bug in jQuery.ui somewhere where menu.bindings just grows and grows
+                    $(this).data("ui-autocomplete").menu.bindings = $();
+                },
+
+                select: function (e, i) {
+                    $("#TournamentId").val(i.item.val);
+                    $("#TournamentName").attr("readonly", "readonly");
+                    $(".fadeletetournament").removeClass("d-none")
+                },
+                minLength: 1
+            });
+        });
+    </script>
+
+
+
+
+    @* Auto complate for officer *@
+    <script type="text/javascript">
+
+
+
+        function clearofficer(officernumber) {
+
+            var officerNameSelector = "#DailyIncidents_" + officernumber + "__OfficerName";
+            var officerIdSelector = ".DailyincidentofficerId" + officernumber;
+
+            $(officerNameSelector).removeAttr("readonly")
+
+            $(officerNameSelector).val("");
+            $(officerIdSelector).val("");
+            $(".fadeleteofficer" + officernumber).addClass("d-none");
+
+
+            return false;
+        }
+        var index;
+        $(document).ready(function () {
+
+            $(".DailyincidentofficerName").autocomplete({
+
+                source: function (request, response) {
+                    var input = this.element;
+                    index = $(input).attr('data-index');
+                    if (request.term.length >= 3) {
+                        $.ajax({
+                            url: '/Officers/OfficerAutocomplete/',
+                            data: { prefix: request.term },
+                            type: "POST",
+                            success: function (data) {
+                                response($.map(data, function (item) {
+                                    return item;
+
+                                }))
+                            },
+
+                        });
+                    }
+                },
+                prefix: function (e, ui) {
+                    //fix bug in jQuery.ui somewhere where menu.bindings just grows and grows
+                    $(this).data("ui-autocomplete").menu.bindings = $();
+                },
+
+                select: function (e, i) {
+                    $(".DailyincidentofficerId" + index).val(i.item.val);
+                    $("#DailyIncidents_" + index + "__OfficerName").attr("readonly", "readonly");
+                    $(".fadeleteofficer" + index).removeClass("d-none");
+                    $(this).closest('tr').next('tr').removeClass("d-none")
+
+
+                },
+                minLength: 1
+            });
+        });
+
+    </script>
+
+    @* Auto complate for officer In Daily Notes *@
+    <script type="text/javascript">
+
+
+
+        function clearofficerInDailyNote(officernumber) {
+            var officerNameSelector = "#DailyNotes_" + officernumber + "__OfficerName";
+            var officerIdSelector = ".DailyNotesofficerId" + officernumber;
+
+            $(officerNameSelector).removeAttr("readonly")
+
+            $(officerNameSelector).val("");
+            $(officerIdSelector).val("");
+            $(".fadeleteofficerInDailyNotes" + officernumber).addClass("d-none");
+            return false;
+        }
+        var index;
+        $(document).ready(function () {
+
+            $(".DailyNotesofficerName").autocomplete({
+                autoFocus: true,
+                source: function (request, response) {
+                    var input = this.element;
+                    index = $(input).attr('data-index');
+                    if (request.term.length >= 3) {
+                        $.ajax({
+                            url: '/Officers/OfficerAutocomplete/',
+                            data: { prefix: request.term },
+                            type: "POST",
+                            success: function (data) {
+                                response($.map(data, function (item) {
+                                    return item;
+                                }))
+                            },
+
+                        });
+                    }
+                },
+
+                prefix: function (e, ui) {
+                    //fix bug in jQuery.ui somewhere where menu.bindings just grows and grows
+                    $(this).data("ui-autocomplete").menu.bindings = $();
+                },
+
+                select: function (e, i) {
+                    $(".DailyNotesofficerId" + index).val(i.item.val);
+                    $("#DailyNotes_" + index + "__OfficerName").attr("readonly", "readonly");
+                    $(".fadeleteofficerInDailyNotes" + index).removeClass("d-none");
+                    $(this).closest('tr').next('tr').removeClass("d-none")
+
+
+                },
+                minLength: 1
+            });
+
+        });
+
+    </script>
+
+    @* on text change readynumber *@
+    <script>
+
+        $(document).ready(function () {
+            $("#ReadyNumber").change(function () {
+                // minimum count incidents today
+                var minimumcout = $("#MinimumCountDailyIncidents").val() != null ? $("#MinimumCountDailyIncidents").val() : 0;
+
+                var basenumber = $("#BaseNumber").val() != null ? $("#BaseNumber").val() : 0;
+                var readynumber = ($("#ReadyNumber").val() != null && $("#ReadyNumber").val() > 0) ? $("#ReadyNumber").val() : 0;
+                console.log(readynumber);
+                var NotReadyNumber = basenumber - readynumber;
+
+
+
+                // check notready if < minimum daily incident   , set notreadu = minimumcout
+                if (NotReadyNumber < minimumcout || basenumber - readynumber < 0) {
+                    NotReadyNumber = minimumcout;
+                    readynumber = basenumber - NotReadyNumber;
+                }
+
+
+                $("#ReadyNumber").val(readynumber);
+                $("#NotReadyNumber").val(NotReadyNumber);
+                //var counter;
+                //var cols = "";
+                //var newRow = "";
+                //$("#DailyIncidentTable >tbody ").empty();
+                //for (counter = 0; counter < NotReadyNumber; counter++) {
+                //    newRow = $("<tr class='officertr'>");
+                //    var officerId = "officerId" + counter;
+                //    var spanfaclassfordelete = "fadeleteofficer" + counter;
+
+                //    //new inputs  name and id
+                //    var NewDailyIncidentsOfficerNameId = "DailyIncidents_" + counter + "__OfficerName";;
+                //    var NewDailyIncidentsOfficerName = "DailyIncidents[" + counter + "].OfficerName";
+                //    var officerHiddenId = "DailyIncidents[" + counter + "].OfficerId";
+
+
+                //    var NewDailyIncidentsReason = "DailyIncidents[" + counter + "].Reason";
+
+                //    var NewDailyIncidentsExplanation = "DailyIncidents[" + counter + "].Explanation";
+
+
+                //    var NewDailyIncidentsStartDate = "DailyIncidents[" + counter + "].StartDate";
+
+                //    var NewDailyIncidentsEndDate = "DailyIncidents[" + counter + "].EndDate";
+
+                //    var NewDailyIncidentsIsFinish = "DailyIncidents[" + counter + "].IsFinish";
+
+                //    // officer name and her hidden id
+                //    cols += '<td class="col-sm-3">';
+
+                //    cols += '<input class="officerName form-control ui-autocomplete-input" autocomplete="off" name="' + NewDailyIncidentsOfficerName + '" id="' + NewDailyIncidentsOfficerNameId + '" data-index="' + counter + '" type = "text" />';
+                //    cols += '<span class="fa fa-close d-none ' + spanfaclassfordelete + '" onclick="return clearofficer(' + counter + ');"></span>';
+                //    cols += '<input type="hidden" name="' + officerHiddenId + '" class="' + officerId + '" />';
+                //    cols += '<div class="divforAutocomplete_list_toAppend"></div>';
+                //    cols += '</td>';
+
+                //    //reason
+                //    cols += '<td class="col-sm-2">';
+                //    cols += '<input class="form-control DailyIncidentsReason" name="' + NewDailyIncidentsReason + '"  type = "text" />';
+                //    cols += '</td >';
+
+                //    //explanation
+                //    cols += '<td class="col-sm-3">';
+                //    cols += '<input class="form-control DailyIncidentsExplanation" name="' + NewDailyIncidentsExplanation + '"  type = "text" />';
+                //    cols += '</td >';
+
+                //    //start date
+                //    cols += '<td class="col-sm-1">';
+                //    cols += '<input class="form-control DailyIncidentsStartDate" name="' + NewDailyIncidentsStartDate + '"  type = "date" />';
+                //    cols += '</td >';
+
+                //    //End date
+                //    cols += '<td class="col-sm-1">';
+                //    cols += '<input class="form-control DailyIncidentsStartDate" name="' + NewDailyIncidentsEndDate + '"  type = "date" />';
+                //    cols += '</td >';
+
+                //    //isfinish
+                //    cols += '<td class="col-sm-1">';
+                //    cols += '<div class="checkbox">'
+                //    cols += '<input  name="' + NewDailyIncidentsIsFinish + '"  type = "checkbox" />';
+                //    cols += '</div>';
+                //    cols += '</td >';
+                //    cols += '</tr>';
+
+                //    newRow.append(cols);
+
+                //    $("#DailyIncidentTable").append(newRow);
+
+                //}
+            });
+        });
+
+    </script>
+
+
+
+
+}

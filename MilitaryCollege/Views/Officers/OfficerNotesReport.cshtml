@@ -1,0 +1,68 @@
+﻿@model IEnumerable<MilitaryCollege.Models.Officer>
+<table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                الاسم و الشهرة
+            </th>
+            <th>
+                ملاحظات آمر الدورة
+            </th>
+
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var officer in Model)
+        {
+            <tr>
+                <td>
+                    <b>@Html.DisplayFor(model => officer.Name)</b>
+                </td>
+                <td>
+                    @Html.TextAreaFor(model => officer.Notes, new { @class = "textAreaNote", @readonly = "readonly" })
+                </td>
+
+            </tr>
+        }
+
+
+    </tbody>
+</table>
+
+@section Styles
+{
+    <style>
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+
+        thead {
+            /*height: 100px;*/
+            font-size: 1.5em;
+        }
+
+
+        .textAreaNote {
+            width: 100%;
+            border: hidden;
+            background: transparent !important;
+            resize: none;
+            outline: none;
+        }
+    </style>
+
+}
+
+@section Scripts
+{
+    <script>
+        $("textarea").each(function () {
+            this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+        }).on("input", function () {
+            this.style.height = "auto";
+            this.style.height = (this.scrollHeight) + "px";
+        });
+    </script>
+}

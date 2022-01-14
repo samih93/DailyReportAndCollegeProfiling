@@ -1,0 +1,111 @@
+﻿
+
+@model IEnumerable<MilitaryCollege.Models.Officer>
+
+<div class="container">
+    @*<div class="row">
+            <input type="button" value="تحميل الجدول" class="btn btn-danger" onclick="return PrintEducationalList()" />
+        </div>*@
+    <div class="row">
+        <table id="Hobbiestable" class=" dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        الاسم و الشهرة
+                    </th>
+                    <th>
+                        الهواية
+                    </th>
+                    <th>
+                        الشرح
+                    </th>
+                    <th>
+                        المستوى
+                    </th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 0;
+                    string trclass = "";
+                }
+                @foreach (var officer in Model)
+                {
+                    trclass = i % 2 == 0 ? "even" : "odd";
+
+                <tr class="@trclass" style="border-top:2px solid black">
+                    @if (officer.Hobbies.Count == 0)
+                    {
+                        <td><b>@officer.Name</b></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+
+                    }
+                    else
+                    {
+                        <td rowspan="@officer.Hobbies.Count"><b>@officer.Name</b></td>
+                        <td>@officer.Hobbies.First().Name</td>
+                        <td>@officer.Hobbies.First().Explanation</td>
+                        <td>@officer.Hobbies.First().Level</td>
+                    }
+
+
+                </tr>
+                    var j = 0;
+
+                    @foreach (var H in officer.Hobbies)
+                    {
+
+
+                        if (j != 0)
+                        {
+                            <tr class="@trclass">
+                                <td>@H.Name</td>
+                                <td>@H.Explanation</td>
+                                <td>@H.Level</td>
+                            </tr>
+                        }
+                        j++;
+
+                    }
+                    i++;
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Styles
+{
+
+    <style>
+        .odd {
+            background-color: #dee2e6 !important;
+        }
+
+        .even {
+            background-color: unset !important;
+        }
+
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+        .table-bordered td, .table-bordered th {
+            border: 1px solid #495057 !important;
+        }
+
+
+
+        thead {
+            background-color: #85c2ff;
+            font-size:1.3em;
+        }
+    </style>
+
+}
+

@@ -1,0 +1,286 @@
+﻿@model IEnumerable<MilitaryCollege.Models.Tournament>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<div class="container">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <p>
+            @if (User.IsInRole("SuperAdmin"))
+            {
+                <a asp-action="Create">اضافة دورة</a>
+            }
+        </p>
+        @if (User.IsInRole("Viewer") || User.IsInRole("SuperAdmin"))
+        {
+            <div class="row mb-4">
+                <div class=" col-md-8">
+                    <label class="control-label" for="TournamentId">الدورة</label>
+                    <input type="text" id="txttournament" class="form-control col-md-6" autocomplete="on" name="TournamnetName" />
+                    @* CLOSE ICON TO DELETE TOURNAMENT TO SET A NEW ONE *@
+                    <span class="fa fa-close fadeletetournament d-none" onclick="return clearTournament();"></span>
+
+                    <input type="hidden" id="hfTournamnetId" value="@Model.First().Id" name="TournamnetId" />
+                </div>
+            </div>
+
+        }
+
+
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div id="tournament-card" data-id="@item.Id" class="mb-3 col-lg-4 col-md-6 col-sm-12 col-12">
+                    <div class="card mx-auto" id="card">
+                        @* mx auto to center card inside row *@
+
+                        <div class="card-header">
+                            <img src="~/Media/Tournament/@item.TournamentImage" class="image card-img-top" alt="...">
+
+                            @if (!User.IsInRole("User"))
+                            {
+                                <div class="overlay">
+                                    <div class="text">
+                                        <a asp-controller="Officers" class="link_display_officer" asp-action="OfficerListOfcard" asp-route-Tid="@item.Id">عرض  </a>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                        <div class="card-body pt-2 pb-2">
+                            @item.Name
+                        </div>
+
+                        <div class="card-footer">
+
+                            @* user can edit or add woku3at*@
+                            @if (User.IsInRole("Admin") || User.IsInRole("Officer") || User.IsInRole("AdminInvT"))
+                            {
+                                <a class="btn btn-primary" asp-controller="Tournaments" asp-action="Edit" asp-route-id="@item.Id">تعديل</a>
+                                <a class="btn btn-primary" asp-controller="Tournaments" asp-action="AddDailyIncidentsForTournament" asp-route-id="@item.Id">إضافة وقوعات</a>
+                            }
+
+                            @if (User.IsInRole("Viewer"))
+                            {
+                                <a class="btn btn-primary" asp-controller="Officers" asp-action="Index" asp-route-id="@item.Id">عرض جدول الضباط</a>
+                                <a class="btn btn-primary" asp-controller="DailyReport" asp-action="Index" asp-route-id="@item.Id">عرض التقرير</a>
+                            }
+
+
+
+
+                            @if (User.IsInRole("SuperAdmin"))
+                            {
+                                <a class="btn btn-primary" asp-controller="Tournaments" asp-action="Edit" asp-route-id="@item.Id">تعديل</a>
+                                <a class="btn btn-primary" asp-controller="Officers" asp-action="Index" asp-route-id="@item.Id">عرض جدول الضباط</a>
+                                <a class="btn btn-danger" asp-controller="Tournaments" asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                            }
+
+                        </div>
+                    </div>
+
+                    @if (User.IsInRole("SuperAdmin"))
+                    {
+                        <a class="btn btn-danger btnassign col-md-6" asp-controller="Administration" asp-action="AssignUserToTournament" asp-route-id="@item.Id">Assign User</a>
+                        <a class="btn btn-success btnassign col-md-6" asp-controller="DailyReport" asp-action="Index" asp-route-id="@item.Id">عرض التقرير</a>
+
+                    }
+
+                </div>
+            }
+        </div>
+    }
+</div>
+
+
+
+
+@section Styles
+{
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+
+    <style>
+        .fadeletetournament {
+            float: right;
+            margin-right: 47%;
+            margin-top: -27px;
+            position: relative;
+            z-index: 2;
+            color: red;
+        }
+
+        .btnassign {
+            width: 50%;
+            margin-right: 6rem !important;
+            margin-top: 1%;
+        }
+
+        .table a {
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+            .table a:hover {
+                text-decoration: none;
+            }
+
+        .card {
+            width: 22em;
+            text-align: center;
+            box-shadow: 0 15px 40px rgb(38 114 189 / 52%);
+        }
+
+        .card-body {
+            font-weight: bold;
+            color: #1f5c98;
+            height: 60px;
+        }
+
+        .card-header {
+            height: 200px;
+            padding: 0 !important;
+            border-bottom: unset !important;
+        }
+
+        .card-footer {
+            width: auto;
+            padding: 10px;
+        }
+
+        .card-header img {
+            height: 200px !important;
+            background-repeat: no-repeat;
+            background-position: center center;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+
+        a {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+            a:hover {
+                text-decoration: none;
+            }
+
+        .image {
+            opacity: 1;
+            display: block;
+            width: 100%;
+            height: auto;
+            transition: .5s ease;
+            backface-visibility: hidden;
+        }
+
+        .overlay {
+            position: absolute;
+            bottom: 18%;
+            left: 0;
+            right: 0;
+            opacity: 0.8;
+            background-color: #008CBA;
+            overflow: hidden;
+            width: 100%;
+            height: 82%;
+            transform: scale(0);
+            transition: .3s ease;
+        }
+
+        .card:hover .overlay {
+            transform: scale(1);
+        }
+
+        .link_display_officer:hover {
+            color: white;
+            padding: 39px !important;
+        }
+
+        .text {
+            background-color: #008CBA;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            padding: 16px 32px;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .link_display_officer {
+            color: white;
+            font-size: 25px;
+        }
+
+            .link_display_officer:hover {
+                color: white;
+                padding: 39px !important;
+            }
+    </style>
+
+}
+
+
+@section Scripts
+{
+    <script>
+        $('.TournamentIndexLink').addClass("active");
+    </script>
+    @* Auto complate for tournamnet *@
+    <script type="text/javascript">
+        function clearTournament() {
+            $("#txttournament").val("");
+            $("#hfTournamnetId").val("");
+            $("#txttournament").removeAttr("readonly")
+            $(".fadeletetournament").addClass("d-none");
+            $('div#tournament-card').removeClass('d-none');
+
+
+            return false;
+        }
+        $(function () {
+            $("#txttournament").autocomplete({
+                source: function (request, response) {
+                    if (request.term.length >= 3) {
+
+                        $.ajax({
+                            url: '/Tournaments/TournamentAutoComplete/',
+                            data: { prefix: request.term },
+                            type: "POST",
+                            success: function (data) {
+                                response($.map(data, function (item) {
+                                    return item;
+                                }))
+                            },
+                            //error: function (response) {
+                            //    alert(response.responseText);
+                            //},
+                            //failure: function (response) {
+                            //    alert(response.responseText);
+                            //}
+                        });
+                    }
+                },
+                prefix: function (e, ui) {
+                    //fix bug in jQuery.ui somewhere where menu.bindings just grows and grows
+                    $(this).data("ui-autocomplete").menu.bindings = $();
+                },
+
+                select: function (e, i) {
+                    $("#hfTournamnetId").val(i.item.val);
+                    $('#tournament-card:not([data-id="' + i.item.val + '"])').addClass('d-none');
+                    $("#txttournament").attr("readonly", "readonly");
+                    $(".fadeletetournament").removeClass("d-none")
+                },
+                minLength: 1
+            });
+        });
+    </script>
+}

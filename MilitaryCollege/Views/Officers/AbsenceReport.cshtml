@@ -1,0 +1,130 @@
+﻿@model IEnumerable<MilitaryCollege.Models.ViewModels.OfficerVM>
+
+<table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                الاسم و الشهرة
+            </th>
+            <th>
+                السبب
+            </th>
+            <th>
+                من
+            </th>
+            <th>
+                الى
+            </th>
+            <th>
+                عدد الايام
+            </th>
+            <th>ملاحظات</th>
+            <th>المجموع </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var i = 0;
+            string trclass = "";
+
+        }
+
+
+        @foreach (var officer in Model)
+        {
+            trclass = i % 2 == 0 ? "even" : "odd";
+
+            // blue border bottom on td with rowspan
+            string latestRecord = i == Model.Count() - 1 ? "border-bottom : 2px solid #3397fb !important" : "";
+            int TotalCountOfIncidentsForOfficer = officer.TotalCountOfIncidentsForOfficer != 0 ? officer.TotalCountOfIncidentsForOfficer : 0;
+            @if (TotalCountOfIncidentsForOfficer == 0)
+            {
+                <tr class="@trclass" style="border-top:2px solid #3397fb !important">
+                    <td style="@latestRecord"><b>@officer.Name</b></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            }
+            else
+            {
+                <tr class="@trclass" style="border-top:2px solid #3397fb !important">
+                    <td rowspan="@TotalCountOfIncidentsForOfficer" style="@latestRecord"><b>@officer.Name</b></td>
+                    <td>@officer.DailyIncidentents.First().ReasonOfIncident.Name</td>
+                    <td>@officer.DailyIncidentents.First().StartDate.Value.ToString("yyyy-MM-dd")</td>
+                    <td>@officer.DailyIncidentents.First().EndDate.Value.ToString("yyyy-MM-dd")</td>
+                    <td>@officer.DailyIncidentents.First().CountDaysOfIncident</td>
+                    <td>@officer.DailyIncidentents.First().Explanation</td>
+                    @if (TotalCountOfIncidentsForOfficer != 1)
+                    {
+                        <td rowspan="@TotalCountOfIncidentsForOfficer" style="@latestRecord">@officer.SumOfDaysInIncidentsForOfficer</td>
+                    }
+                    else
+                    {
+                        <td style="@latestRecord">@officer.SumOfDaysInIncidentsForOfficer</td>
+                    }
+
+                </tr>
+            }
+            i++;
+            var j = 0;
+            if (officer.DailyIncidentents.Count > 0)
+            {
+                foreach (var di in officer.DailyIncidentents)
+                {
+                    if (j != 0)
+                    {
+                        <tr class="@trclass">
+
+                            <td>@di.ReasonOfIncident.Name</td>
+                            <td>@di.StartDate.Value.ToString("yyyy-MM-dd")</td>
+                            <td>@di.EndDate.Value.ToString("yyyy-MM-dd")</td>
+                            <td>@di.CountDaysOfIncident</td>
+                            <td>@di.Explanation</td>
+                        </tr>
+                    }
+                    j++;
+                }
+
+            }
+          
+        }
+
+    </tbody>
+</table>
+
+@section Styles
+{
+    <style>
+        .odd {
+            background-color: #dee2e6 !important;
+        }
+
+        .even {
+            background-color: unset !important;
+        }
+
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+
+
+        tr.odd > td {
+            border-color: #b5b5b5 !important;
+        }
+
+        thead {
+            font-size: 1.3em;
+        }
+
+        table tr:last-child {
+            border-bottom: 2px solid #3397fb !important;
+        }
+    </style>
+
+
+}

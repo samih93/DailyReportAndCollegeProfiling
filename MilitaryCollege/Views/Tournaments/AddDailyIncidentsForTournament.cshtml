@@ -1,0 +1,53 @@
+﻿@model MilitaryCollege.Models.DailyIncident
+
+@{
+    ViewData["Title"] = "اضافة وقوعات للدورة";
+}
+
+    <h2 style="color:red"> اضافة وقوعات ل '@ViewBag.TournamnetName'</h2> 
+
+<div class="container">
+
+    <form asp-action="AddDailyIncidentsForTournament">
+        @Html.HiddenFor(m => m.TournamentId)
+
+        <div class="row">
+
+            <table id="DailyIncidentTable" class="table order-list DailyIncidentTable">
+                <thead>
+                    <tr>
+                        <th><label asp-for="@Model.ReasonOfIncident.Name"></label></th>
+                        <th><label asp-for="@Model.Explanation"></label></th>
+                        <th><label asp-for="@Model.StartDate"></label></th>
+                        <th><label asp-for="@Model.EndDate"></label></th>
+                        <th><label asp-for="@Model.NotCountDayOfIncident"></label></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @Html.DropDownListFor(m => m.ReasonOfIncidentId, (IEnumerable<SelectListItem>)ViewBag.DDLReason, new { @class = "form-control " })
+                        </td>
+                        <td>
+                            <input asp-for="@Model.Explanation" class=" form-control" />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.StartDate" type="text" class=" form-control datepicker" />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.EndDate" type="text" class=" form-control datepicker" />
+                        </td>
+                        <td>
+                            <input type="checkbox" asp-for="@Model.NotCountDayOfIncident" class=" form-control" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group mt-4">
+            <input type="submit" value="اضافة" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+

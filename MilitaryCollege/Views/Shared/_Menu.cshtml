@@ -1,0 +1,88 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+<ul class="HomeMenu navbar-nav mr-1  flex-grow-1">
+    @*nav-justified*@
+    @if (!User.IsInRole("User"))
+    {
+        <li class="nav-item ">
+            <a class="nav-link TournamentIndexLink" asp-area="" asp-controller="Tournaments" asp-action="Index">الدورات </a>
+        </li>
+
+    }
+
+    @if (!User.IsInRole("Viewer") && !User.IsInRole("SuperAdmin"))
+    {
+        <li class="nav-item ">
+            <a class="nav-link OfficerIndexLink" asp-area="" asp-controller="Officers" asp-action="Index">جدول الضباط </a>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link DailyReportIndexLink" asp-area="" asp-controller="DailyReport" asp-action="Index">التقرير اليومي </a>
+        </li>
+
+    }
+
+
+
+
+    @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+    {
+
+        <li class="nav-item ">
+            <a class="nav-link DailyReportAdministration" asp-area="" asp-controller="DailyReport" asp-action="AdministrationDailyReportNote"> ادارةالوقوعات </a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                التقارير
+            </a>
+            <div class="dropdown-menu ReportDropdownList" aria-labelledby="navbarDropdownMenuLink">
+                <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="PersonelInformationReport">المعلومات الشخصية</a>
+                <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="EducationalAttainmentReport">التحصيل العلمي</a>
+                <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="LanguagesReport">اللغات</a>
+                <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="HobbiesReport">الهوايات</a>
+                <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="MilitaryCollegeReport">الكلية الحربية</a>
+                <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="AbsenceReport">الغياب</a>
+                <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="OfficerDailyNoteReport">السلوك</a>
+                <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="OfficerNotesReport">الملاحظات</a>
+
+            </div>
+        </li>
+    }
+
+    @if(User.IsInRole("AdminInvT"))
+    {
+    <li class="nav-item ">
+        <a class="nav-link DailyReportAdministration" asp-area="" asp-controller="DailyReport" asp-action="AdministrationDailyReportNote"> ادارةالوقوعات </a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            التقارير
+        </a>
+        <div class="dropdown-menu ReportDropdownList" aria-labelledby="navbarDropdownMenuLink">
+            <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="AbsenceReport">الغياب</a>
+            <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="OfficerDailyNoteReport">السلوك</a>
+            <a class="nav-link dropdown-item" asp-controller="Officers" asp-action="OfficerNotesReport">الملاحظات</a>
+
+        </div>
+    </li>
+    }
+
+
+    @if (User.IsInRole("SuperAdmin"))
+    {
+        <li class="nav-item">
+            <a class="nav-link LitsOfRoles" asp-controller="Administration" asp-action="ListOfRoles">Administration </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-lightblue" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+
+
+    }
+
+
+</ul>
+}

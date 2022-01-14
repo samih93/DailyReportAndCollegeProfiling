@@ -1,0 +1,77 @@
+﻿@using MilitaryCollege.Models;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager ;
+@using Newtonsoft.Json;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title class="no-print">@ViewData["Title"] - برنامج الكلية الحربية</title>
+    @*<link href="~/css/jquery-ui.css" rel="stylesheet" />*@
+    <link href="~/lib/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @*<link href="~/css/font-awesome.min.css" rel="stylesheet" />*@
+
+    <link href="~/css/custom.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="~/Media/officer_favicon.png">
+
+</head>
+<body class="MilitaryCollegeBody">
+    <img class="img_headr_left no-print" src="~/Media/instituteLogo.png" />
+    <img class="img_headr_right no-print" src="~/Media/instituteLogo.png" />
+
+    <header class="no-print">
+        <div class="container">
+            <h1 class="text-center mb-3 headertitle">معهد قوى الأمن الداخلي - كلية الضباط </h1>
+        </div>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+
+            <div class="container">
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <partial name="_Menu" />
+                    }
+
+                    <partial name="_LoginPartial" />
+
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3 mt-5">
+
+            <div class="msgDiv">
+                @if (TempData["message"] != null)
+                {
+                    NotificationSystem msg = JsonConvert.DeserializeObject<NotificationSystem>((string)TempData["message"]);
+                    @Html.Raw(NotificationSystem.GenerateNotification(msg.Message, msg.NotificationType))
+                }
+            </div>
+            @RenderBody()
+        </main>
+    </div>
+    @* jquery 3.3.1 *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @*<script src="~/js/jquery-ui.min.js"></script>*@
+    <script src="~/lib/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+    @* jquery migration has fix autocomplete list under field *@
+    <script src="~/js/jquery-migrate-3.0.0.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/global.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+    @RenderSection("Styles", required: false)
+</body>
+</html>

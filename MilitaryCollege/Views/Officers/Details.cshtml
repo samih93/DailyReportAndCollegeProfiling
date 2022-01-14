@@ -1,0 +1,656 @@
+﻿@model MilitaryCollege.Models.ViewModels.OfficerVM
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Details";
+    //var profile_image = !String.IsNullOrEmpty(Model.ExistingImage) ? Model.ExistingImage : "defaultofficer.png";
+    var HobbiesSkills_Word="";
+}
+
+
+<div class="container profileinfoContainer">
+    <h1 class="text-center"> الاستمارة الشخصية</h1>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <img src="~/Media/Officer_Profile/@Model.ExistingImage" style="width:130px;height:130px" />
+        </div>
+    </div>
+    @* Name *@
+    <div class="row">
+        <div class="col-md-2">
+            @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="col-md-6">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.Name)
+            </span>
+        </div>
+    </div>
+
+    @*  PhoneNumber And MilitaryNumber*@
+    <div class="row">
+        <div class="col-md-2">
+            @Html.LabelFor(model => model.PhoneNumber)
+        </div>
+        <div class="col-md-4">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </span>
+        </div>
+        <div class="col-md-2">
+            @Html.LabelFor(model => model.MilitaryNumber)
+        </div>
+        <div class="col-md-4">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.MilitaryNumber)
+            </span>
+
+        </div>
+    </div>
+
+    @* Email Adress *@
+    <div class="row mb-4">
+        <div class="col-md-2">
+            @Html.LabelFor(model => model.Email)
+        </div>
+        <div class="col-md-4">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.Email)
+            </span>
+        </div>
+    </div>
+
+    @* Personel Info *@
+    <u class="mb-2 sectiontitle"><b>المعلومات الشخصية</b></u>
+    @* Birthaddress and birthdate and blood type*@
+    <div class="row mt-2">
+        <div class="col-md-1">
+            @Html.LabelFor(model => model.BirthDate)
+        </div>
+        <div class="col-md-2">
+            <span class="displayfor">
+                @Model.BirthDate.ToString("dd-MM-yyyy")
+            </span>
+        </div>
+
+        <div class="col-md-2">
+            @Html.LabelFor(model => model.BirthAddress)
+        </div>
+        <div class="col-md-2">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.BirthAddress)
+            </span>
+        </div>
+        <div class="col-md-1">
+            @Html.LabelFor(model => model.BloodType)
+        </div>
+        <div class="col-md-2">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.BloodType)
+            </span>
+        </div>
+    </div>
+
+    @* Address and Nationality and height*@
+    <div class="row">
+        <div class="col-md-1">
+            <label asp-for="Address" style="width:84px"></label>
+        </div>
+        <div class="col-md-2">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.Address)
+            </span>
+        </div>
+
+        <div class="col-md-2">
+            @Html.LabelFor(model => model.Nationality)
+        </div>
+        <div class="col-md-2">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.Nationality)
+            </span>
+        </div>
+        <div class="col-md-1">
+            @Html.LabelFor(model => model.Height)
+        </div>
+        <div class="col-md-2">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.Height)
+            </span>
+        </div>
+    </div>
+
+    @* Previous Job *@
+    <div class="row ">
+        <div class="col-md-2">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                if (!User.IsInRole("AdminInvT"))
+                {
+                    <label asp-for="@Model.PreviousJob" class="control-label"></label>
+                }
+                else
+                {
+                    <label asp-for="@Model.PreviousJob" class="control-label">مركزه السابق</label>
+
+                }
+            }
+        </div>
+        <div class="col-md-4">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.PreviousJob)
+            </span>
+        </div>
+    </div>
+
+    @* HealthProblem  *@
+    <div class="row ">
+        <div class="col-md-2">
+            @Html.LabelFor(model => model.HealthProblem)
+        </div>
+        <div class="col-md-4">
+            <span class="displayfor">
+                @Html.DisplayFor(model => model.HealthProblem)
+            </span>
+        </div>
+    </div>
+
+
+    @* Educational Attainments  *@
+    <u class="mb-2 sectiontitle"><b>التحصيل العلمي </b></u>
+    <table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.EducationalAttainments.First().Certificate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EducationalAttainments.First().Source)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EducationalAttainments.First().Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EducationalAttainments.First().Grade)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.EducationalAttainments.Count > 0)
+            {
+                @foreach (var item in Model.EducationalAttainments)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => item.Certificate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Source)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Grade)
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">
+                        لا يوجد معلومات
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @* Languages  *@
+    <u class="mb-2 sectiontitle" sectiontitle><b>اللغات  </b></u>
+    <table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Languages.First().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Languages.First().Listen)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Languages.First().Speak)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Languages.First().Read)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Languages.First().Write)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Languages.Count > 0)
+            {
+                @foreach (var item in Model.Languages)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Listen)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Speak)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Read)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Write)
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">
+                        لا يوجد معلومات
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @* Hobbies  *@
+    @if (SignInManager.IsSignedIn(User))
+    {
+        HobbiesSkills_Word = !User.IsInRole("AdminInvT") ? "الهوايات" : "مهارات العمل على البرامج ";
+    }
+            <u class="mb-2 sectiontitle"><b>@HobbiesSkills_Word  </b></u>
+            <table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Hobbies.First().Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Hobbies.First().Explanation)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Hobbies.First().Level)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Hobbies.Count > 0)
+                    {
+                        @foreach (var item in Model.Hobbies)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(m => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.Explanation)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.Level)
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3">
+                                لا يوجد معلومات
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+            @if (SignInManager.IsSignedIn(User))
+            {
+                @if (!User.IsInRole("AdminInvT"))
+                {
+                    @* الكلية الحربية  *@
+                    <u class="mb-2 sectiontitle"><b>الكلية الحربية  </b></u>
+                    <table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th colspan="2">
+                                    التصنيف عند الدخول
+                                </th>
+                                <th rowspan="2">
+                                    الاختصاص
+                                </th>
+                                <th colspan="2">
+                                    التصنيف عند التخرج
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>عام</th>
+                                <th>قوى امن</th>
+                                <th>عام</th>
+                                <th>قوى امن</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RatingEnteringNumber != null && Model.RatingEnteringYear != null)
+                            {
+
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(model => model.RatingEnteringYear)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.RatingEnteringNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Specialization)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.RatingGradutionYear)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.RatingGradutionNumber)
+                                    </td>
+
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5">
+                                        لا يوجد معلومات
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                }
+            }
+            @* 	الوقوعات خلال الدورة    *@
+            <u class="mb-2 sectiontitle"><b>الغياب عن الدورة  </b></u>
+            <table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DailyIncidentents.First().StartDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DailyIncidentents.First().EndDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DailyIncidentents.First().ReasonOfIncident.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DailyIncidentents.First().Explanation)
+                        </th>
+                        <th>العدد</th>
+                        <th>العدد الاجمالي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.DailyIncidentents.Count > 0)
+                    {
+                        int index = 0;
+                        @foreach (var item in Model.DailyIncidentents)
+                        {
+                            <tr>
+                                <td>
+                                    @item.StartDate.Value.ToString("yyyy-MM-dd")
+                                </td>
+                                <td>
+                                    @item.EndDate.Value.ToString("yyyy-MM-dd")
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.ReasonOfIncident.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.Explanation)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.CountDaysOfIncident)
+                                </td>
+
+                                @if (index == 0)
+                                {
+                                    <td rowspan="@Model.TotalCountOfIncidentsForOfficer" class="sumoftotalincident">@Model.SumOfDaysInIncidentsForOfficer</td>
+                                }
+
+
+                            </tr>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6">
+                                لا يوجد وقوعات
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+            @* 	الملاحظات خلال الدورة    *@
+            <u class="mb-2 sectiontitle"><b>ملف السلوك الشخصي  </b></u>
+            <table class="dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+                <thead>
+
+                    <tr>
+                        <th colspan="2" style="width:50%">
+                            @Html.DisplayName("ايجابيات")
+                        </th>
+                        <th colspan="2" style="width:50%">
+                            @Html.DisplayName("سلبيات")
+                        </th>
+
+                    </tr>
+                    <tr>
+                        <th style="min-width: 100px">
+                            @Html.DisplayName("التاريخ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("الشرح")
+                        </th>
+                        <th style="min-width:100px">
+                            @Html.DisplayName("التاريخ")
+                        </th>
+                        <th>
+                            @Html.DisplayName("الشرح")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.DailyNotes.Count > 0)
+                    {
+
+                        @foreach (var item in Model.DailyNotes)
+                        {
+                            string ImportantNoteClass = item.IsImportant ? "ImportantPositiveNote" : "";
+                            if (item.IsPositive)
+                            {
+                                ImportantNoteClass = item.IsImportant ? "ImportantPositiveNote" : "";
+                                <tr>
+                                    <td>
+                                        @item.CreationDate.ToString("yyyy-MM-dd")
+                                    </td>
+                                    <td class="@ImportantNoteClass">
+                                        @item.Note
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+
+                                </tr>
+                            }
+                            else
+                            {
+                                ImportantNoteClass = item.IsImportant ? "ImportantNegativeNote" : "";
+
+                                <tr>
+
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        @item.CreationDate.ToString("yyyy-MM-dd")
+                                    </td>
+                                    <td class="@ImportantNoteClass">
+                                        @item.Note
+                                    </td>
+
+                                </tr>
+                            }
+
+
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">
+                                لا يوجد ملاحظات
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+            @* 	الوقوعات خلال الدورة    *@
+            <u class="mb-2 sectiontitle"><b>الملاحظات  </b></u>
+            @if (!String.IsNullOrEmpty(Model.Notes))
+
+            {
+                <div class="col-md-12 Notes">
+                    @Html.TextAreaFor(model => model.Notes, new { @class = "textAreaNote", @readonly = "readonly" })
+                </div>
+            }
+            else
+            {
+                <div class="col-md-12 Notes" style="text-align:center;">
+                    لا يوحج ملاحظات
+                </div>
+            }
+
+        </div>
+
+<div class="mt-3 no-print">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        if (!User.IsInRole("Viewer"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id">تعديل</a> @("|")
+        }
+    }
+    <a asp-action="OfficerListOfcard"> الرجوع الى القائمة</a>
+    @* <input id="btnprint" type="button" onclick="printDiv('profileinfoContainer')" class="btn-primary" value="تحميل" />*@
+
+</div>
+
+
+
+
+@section Styles
+{
+    <style>
+
+        .textAreaNote {
+            width: 100%;
+            border: hidden;
+            background: transparent !important;
+            resize: none;
+            outline: none;
+        }
+
+        .Notes {
+            color: #3397fb;
+            font-weight: bold;
+            background-color: #f2f2f2;
+        }
+
+        .sumoftotalincident {
+            color: red;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .displayfor {
+            color: #2c86de;
+            font-weight: 500;
+        }
+
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+
+        .profileinfoContainer {
+            padding: 10px;
+            border: 1px solid black;
+        }
+
+        thead {
+            background-color: #3397fb;
+        }
+
+        .sectiontitle {
+            font-size: 1.2em;
+        }
+
+        .ImportantPositiveNote {
+            background-color: #65ea65;
+        }
+
+        .ImportantNegativeNote {
+            background-color: #ff9f9f;
+        }
+    </style>
+}
+
+@section Scripts
+{
+
+    <script>
+        $("textarea").each(function () {
+            this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+        }).on("input", function () {
+            this.style.height = "auto";
+            this.style.height = (this.scrollHeight) + "px";
+        });
+    </script>
+    @*<script>
+            $(document).ready(function () {
+                function printDiv(divName) {
+                var printContents = document.getElementById(divName).innerHTML;
+                var originalContents = document.body.innerHTML;
+                document.body.innerHTML = printContents;
+                window.print();
+                document.body.innerHTML = originalContents;
+                }
+
+
+                $("#btnprint").click(function () {
+                    printDiv(divName);
+                });
+            });
+
+        </script>*@
+
+}

@@ -1,0 +1,73 @@
+﻿@model MilitaryCollege.Models.ViewModels.TournamentVM
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>تعديل الدورة </h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div>
+                <label asp-for="@Model.TournamentImage" class="control-label"></label>
+                <div class="custom-file mb-3">
+                    <label class="custom-file-label pl-0 ">انقر هنا لإضافة الصورة </label>
+                    <input asp-for="@Model.TournamentImage" class="form-control custom-file-input" />
+                    <span asp-validation-for="@Model.TournamentImage" class="text-danger"></span>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <img src="~/Media/Tournament/@Model.ExistingTournamentImage" style="width:300px;height:200px" />
+                </div>
+                @Html.HiddenFor(m => m.ExistingTournamentImage)
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <textarea asp-for="Name" class="form-control" ></textarea>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Note" class="control-label"></label>
+                <input asp-for="Note" class="form-control" />
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input pr-5 mr-5" asp-for="IsActive" /> نشط
+                </label>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="حفط" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+     @*  //// this script only to show the file selected in input file  *@
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var valbefor = $(this).val(); // C:\fakepath\IMG_0160.JPG
+                console.log(valbefor);
+                // get name of image with extention
+                var filename = $(this).val().split("\\").pop(); // IMG_0160.JPG
+                console.log($(this));
+                // add image name to label
+                $(this).parent('.custom-file').find('.custom-file-label').html(filename);
+            });
+        });
+
+</script>
+}

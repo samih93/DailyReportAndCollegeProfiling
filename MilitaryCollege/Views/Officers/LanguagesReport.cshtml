@@ -1,0 +1,122 @@
+﻿
+
+@model IEnumerable<MilitaryCollege.Models.Officer>
+
+<div class="container">
+    @*<div class="row">
+            <input type="button" value="تحميل الجدول" class="btn btn-danger" onclick="return PrintEducationalList()" />
+        </div>*@
+    <div class="row">
+        <table id="languagestable" class=" dataTable table-striped table-bordered mb-3 mt-2" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        الاسم و الشهرة
+                    </th>
+                    <th>
+                        اللغة
+                    </th>
+                    <th>
+                        الاستماع
+                    </th>
+                    <th>
+                        التكلم
+                    </th>
+                    <th>
+                        القراءة
+                    </th>
+                    <th>
+                        الكتابة
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 0;
+                    string trclass = "";
+                }
+                @foreach (var officer in Model)
+                {
+                    trclass = i % 2 == 0 ? "even" : "odd";
+
+                <tr class="@trclass" style="border-top:2px solid black">
+
+                    @if (officer.Languages.Count == 0)
+                    {
+                        <td><b>@officer.Name</b></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    }
+                    else
+                    {
+                        <td rowspan="@officer.Languages.Count"><b>@officer.Name</b></td>
+                        <td>@officer.Languages.First().Name</td>
+                        <td>@officer.Languages.First().Listen</td>
+                        <td>@officer.Languages.First().Speak</td>
+                        <td>@officer.Languages.First().Read</td>
+                        <td>@officer.Languages.First().Write</td>
+                    }
+                </tr>
+                    var j = 0;
+
+                        @foreach (var L in officer.Languages)
+                        {
+
+
+                            if (j != 0)
+                            {
+                                <tr class="@trclass">
+                                    <td>@L.Name</td>
+                                    <td>@L.Listen</td>
+                                    <td>@L.Speak</td>
+                                    <td>@L.Read</td>
+                                    <td>@L.Write</td>
+                                </tr>
+                            }
+                            j++;
+
+                        }
+                        i++;
+                    
+
+
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Styles
+{
+
+    <style>
+        .odd {
+            background-color: #dee2e6 !important;
+        }
+
+        .even {
+            background-color: unset !important;
+        }
+
+        table.dataTable td, table.dataTable th {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+        thead {
+            font-size: 1.5em;
+        }
+        tr.odd > td {
+            border-color: #b5b5b5 !important;
+        }
+        table tr:last-child {
+            border-bottom: 2px solid black;
+        }
+    </style>
+
+}
+
