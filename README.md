@@ -1,4 +1,5 @@
-# Net core 3 , sql server  
+# Web Application
+# Net core 3 , sql server  , bootstrap , jquery ..
 # MilitaryCollege Tournaments
 1 - Administration section 
 
